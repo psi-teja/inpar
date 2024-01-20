@@ -1,0 +1,10 @@
+# yourappname/urls.py
+from django.urls import path
+from .views import get_sub_table_data, get_data_table_data, get_document, upload_doc
+
+urlpatterns = [
+    path('sub_table/', get_sub_table_data, name='get_sub_table_data'),
+    path('data_table/<str:doc_id>', get_data_table_data, name='get_data_table_data'),
+    path('get-document/<str:doc_id>', get_document, name='get_document'),
+    path('upload_doc/', upload_doc, name='upload_doc')
+]
