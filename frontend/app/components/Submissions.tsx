@@ -9,7 +9,7 @@ function Submissions() {
 
   const getTextOnHover = (item) => {
     if (hoveredRow === item.doc_id) {
-      return (item.status === "processed") ? "Verify" : "View";
+      return item.status === "processed" ? "Verify" : "View";
     } else {
       return item.status; // or any other text you want to display for non-processed status
     }

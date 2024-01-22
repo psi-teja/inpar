@@ -13,9 +13,8 @@ class DataTable(models.Model):
     doc_id = models.CharField(max_length=100, primary_key=True)
     doc_json_ai = models.JSONField(null=True)
     doc_json_gt = models.JSONField(null=True)
-    processed_time = models.DateTimeField(auto_now_add=True)
+    processed_time = models.DateTimeField(null=True)
     human_verified_time = models.DateTimeField(null=True)
 
     class Meta:
         db_table = 'data_table'
-

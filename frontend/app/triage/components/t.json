@@ -1,0 +1,131 @@
+{
+  "Table": [
+    {
+      "id": 1,
+      "HSN": { "text": "", "location": { "bbox": [0, 0, 0, 0], "pageNo": 1 } },
+      "MRP": { "text": "", "location": { "bbox": [0, 0, 0, 0], "pageNo": 1 } },
+      "Rate": { "text": "", "location": { "bbox": [0, 0, 0, 0], "pageNo": 1 } },
+      "Amount": {
+        "text": "",
+        "location": { "bbox": [0, 0, 0, 0], "pageNo": 1 }
+      },
+      "Godown": {
+        "text": "",
+        "location": { "bbox": [0, 0, 0, 0], "pageNo": 1 }
+      },
+      "BatchNO": {
+        "text": "",
+        "location": { "bbox": [0, 0, 0, 0], "pageNo": 1 }
+      },
+      "CGSTRate": {
+        "text": "",
+        "location": { "bbox": [0, 0, 0, 0], "pageNo": 1 }
+      },
+      "Discount": {
+        "text": "",
+        "location": { "bbox": [0, 0, 0, 0], "pageNo": 1 }
+      },
+      "Quantity": {
+        "text": "",
+        "location": { "bbox": [0, 0, 0, 0], "pageNo": 1 }
+      },
+      "SGSTRate": {
+        "text": "",
+        "location": { "bbox": [0, 0, 0, 0], "pageNo": 1 }
+      },
+      "CGSTValue": {
+        "text": "",
+        "location": { "bbox": [0, 0, 0, 0], "pageNo": 1 }
+      },
+      "SGSTValue": {
+        "text": "",
+        "location": { "bbox": [0, 0, 0, 0], "pageNo": 1 }
+      },
+      "ExpiryDate": {
+        "text": "",
+        "location": { "bbox": [0, 0, 0, 0], "pageNo": 1 }
+      },
+      "Description": {
+        "text": "",
+        "location": { "bbox": [0, 0, 0, 0], "pageNo": 1 }
+      },
+      "SerialNumber": {
+        "text": "",
+        "location": { "bbox": [0, 0, 0, 0], "pageNo": 1 }
+      }
+    }
+  ],
+  "BuyerPAN": { "text": "", "location": { "bbox": [0, 0, 0, 0], "pageNo": 0 } },
+  "BuyerName": {
+    "text": "",
+    "location": { "bbox": [0, 0, 0, 0], "pageNo": 0 }
+  },
+  "InvoiceID": {
+    "text": "",
+    "location": { "bbox": [0, 0, 0, 0], "pageNo": 0 }
+  },
+  "BuyerEmail": {
+    "text": "",
+    "location": { "bbox": [0, 0, 0, 0], "pageNo": 0 }
+  },
+  "BuyerGSTIN": {
+    "text": "",
+    "location": { "bbox": [0, 0, 0, 0], "pageNo": 0 }
+  },
+  "InvoiceDate": {
+    "text": "",
+    "location": { "bbox": [0, 0, 0, 0], "pageNo": 0 }
+  },
+  "SupplierPAN": {
+    "text": "sadfsdf",
+    "location": { "bbox": [0, 0, 0, 0], "pageNo": 0 }
+  },
+  "TotalAmount": {
+    "text": "",
+    "location": { "bbox": [0, 0, 0, 0], "pageNo": 0 }
+  },
+  "BuyerAddress": {
+    "text": "",
+    "location": { "bbox": [0, 0, 0, 0], "pageNo": 0 }
+  },
+  "SupplierName": {
+    "text": "",
+    "location": { "bbox": [0, 0, 0, 0], "pageNo": 0 }
+  },
+  "ConsigneeName": {
+    "text": "",
+    "location": { "bbox": [0, 0, 0, 0], "pageNo": 0 }
+  },
+  "SupplierEmail": {
+    "text": "",
+    "location": { "bbox": [0, 0, 0, 0], "pageNo": 0 }
+  },
+  "SupplierGSTIN": {
+    "text": "",
+    "location": { "bbox": [0, 0, 0, 0], "pageNo": 0 }
+  },
+  "BuyerContactNo": {
+    "text": "asdfsdaf",
+    "location": { "bbox": [0, 0, 0, 0], "pageNo": 0 }
+  },
+  "ConsigneeEmail": {
+    "text": "",
+    "location": { "bbox": [0, 0, 0, 0], "pageNo": 0 }
+  },
+  "ConsigneeGSTIN": {
+    "text": "",
+    "location": { "bbox": [0, 0, 0, 0], "pageNo": 0 }
+  },
+  "SupplierAddress": {
+    "text": "",
+    "location": { "bbox": [0, 0, 0, 0], "pageNo": 0 }
+  },
+  "ConsigneeAddress": {
+    "text": "",
+    "location": { "bbox": [0, 0, 0, 0], "pageNo": 0 }
+  },
+  "SupplierContactNo": {
+    "text": "dfas",
+    "location": { "bbox": [0, 0, 0, 0], "pageNo": 0 }
+  }
+}

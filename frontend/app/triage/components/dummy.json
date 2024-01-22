@@ -1,5 +1,5 @@
 {
-    "SupplierContactNo" :[
+    "SupplierContactNo" :
         {
         "text": "",
         "location": {
@@ -11,8 +11,8 @@
                 0
             ]
         }
-    }],
-    "BuyerContactNo":[
+    },
+    "BuyerContactNo":
         {
         "text": "",
         "location": {
@@ -24,8 +24,8 @@
                 0
             ]
         }
-    }],
-    "SupplierPAN":[ {
+    },
+    "SupplierPAN": {
         "text": "",
         "location": {
             "pageNo": 0,
@@ -36,8 +36,8 @@
                 0
             ]
         }
-    }],
-    "BuyerPAN":[
+    },
+    "BuyerPAN":
         {
         "text": "",
         "location": {
@@ -49,8 +49,8 @@
                 0
             ]
         }
-    }],
-    "InvoiceID": [
+    },
+    "InvoiceID": 
         {
             "text": "",
             "location": {
@@ -63,8 +63,8 @@
                 ]
             }
         }
-    ],
-    "InvoiceDate": [
+    ,
+    "InvoiceDate": 
         {
             "text": "",
             "location": {
@@ -77,8 +77,8 @@
                 ]
             }
         }
-    ],
-    "SupplierName": [
+    ,
+    "SupplierName": 
         {
             "text": "",
             "location": {
@@ -91,8 +91,8 @@
                 ]
             }
         }
-    ],
-    "SupplierAddress": [
+    ,
+    "SupplierAddress": 
         {
             "text": "",
             "location": {
@@ -105,8 +105,21 @@
                 ]
             }
         }
-    ],
-    "SupplierGSTIN": [
+    ,
+    "SupplierGSTIN": 
+        {
+            "text": "",
+            "location": {
+                "pageNo": 0,
+                "bbox": [
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            }
+        },
+    "BuyerName": 
         {
             "text": "",
             "location": {
@@ -119,8 +132,8 @@
                 ]
             }
         }
-    ],
-    "BuyerName": [
+    ,
+    "BuyerAddress": 
         {
             "text": "",
             "location": {
@@ -133,8 +146,8 @@
                 ]
             }
         }
-    ],
-    "BuyerAddress": [
+    ,
+    "BuyerGSTIN": 
         {
             "text": "",
             "location": {
@@ -147,8 +160,8 @@
                 ]
             }
         }
-    ],
-    "BuyerGSTIN": [
+    ,
+    "ConsigneeAddress": 
         {
             "text": "",
             "location": {
@@ -161,8 +174,8 @@
                 ]
             }
         }
-    ],
-    "ConsigneeAddress": [
+    ,
+    "ConsigneeName": 
         {
             "text": "",
             "location": {
@@ -175,8 +188,8 @@
                 ]
             }
         }
-    ],
-    "ConsigneeName": [
+    ,
+    "ConsigneeGSTIN": 
         {
             "text": "",
             "location": {
@@ -189,8 +202,8 @@
                 ]
             }
         }
-    ],
-    "ConsigneeGSTIN": [
+    ,
+    "TotalAmount": 
         {
             "text": "",
             "location": {
@@ -203,21 +216,7 @@
                 ]
             }
         }
-    ],
-    "TotalAmount": [
-        {
-            "text": "",
-            "location": {
-                "pageNo": 0,
-                "bbox": [
-                    0,
-                    0,
-                    0,
-                    0
-                ]
-            }
-        }
-    ],
+    ,
     "Table": [
         {   
             "id": 1,
@@ -403,7 +402,7 @@
             }
         }
     ],
-    "SupplierEmail": [
+    "SupplierEmail": 
         {
             "text": "",
             "location": {
@@ -416,8 +415,8 @@
                 ]
             }
         }
-    ],
-    "BuyerEmail": [
+    ,
+    "BuyerEmail": 
         {
             "text": "",
             "location": {
@@ -430,8 +429,8 @@
                 ]
             }
         }
-    ],
-    "ConsigneeEmail": [
+    ,
+    "ConsigneeEmail": 
         {
             "text": "",
             "location": {
@@ -444,5 +443,4 @@
                 ]
             }
         }
-    ]
 }

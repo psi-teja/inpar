@@ -13,6 +13,7 @@ import pytz
 import pika
 import base64
 import magic
+import json
 
 # Establish a connection to RabbitMQ
 connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
@@ -47,7 +48,7 @@ def get_data_table_data(request, doc_id):
             "human_verified_time": timezone.localtime(data_item.human_verified_time, pytz.timezone('UTC')).strftime("%Y-%m-%d %H:%M:%S %Z") if data_item.human_verified_time else None,
         }
 
-        return JsonResponse({"data": serialized_data})
+        return JsonResponse(serialized_data)
 
     except DataTable.DoesNotExist:
         # Return a 404 response if the specified doc_id is not found
@@ -113,3 +114,24 @@ def upload_doc(request):
 
     return JsonResponse({'error': 'Invalid request method'}, status=405)
 
+@csrf_exempt 
+def save_data(request, doc_id):
+    try:
+        data = json.loads(request.body.decode('utf-8'))
+
+
+        obj, created = DataTable.objects.update_or_create(
+                            doc_id=doc_id,
+                            defaults={
+                                'doc_json_gt': data,
+                                'human_verified_time': timezone.now(),
+                            }
+                        )
+
+        SubTable.objects.filter(doc_id=doc_id).update(status='verified')
+
+        return JsonResponse({'success': True})
+    except json.JSONDecodeError as e:
+        return JsonResponse({'error': 'Invalid JSON format'}, status=400)
+    except Exception as e:
+        return JsonResponse({'error': str(e)}, status=500)
