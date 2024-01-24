@@ -2,23 +2,18 @@
 from django.http import JsonResponse, HttpResponse
 from django.core.files.storage import default_storage
 from .models import SubTable, DataTable
-from google.cloud import storage
-import mimetypes
 from django.views.decorators.csrf import csrf_exempt
 from django.core.exceptions import SuspiciousOperation
-import os
 from django.utils import timezone
 from .utils import get_unique_id
 import pytz
-import pika
 import base64
 import magic
 import json
+import redis
 
-# Establish a connection to RabbitMQ
-connection = pika.BlockingConnection(pika.ConnectionParameters('localhost'))
-channel = connection.channel()
-
+redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
+channel = 'upload_doc'
 
 def get_sub_table_data(request):
     ist = pytz.timezone('Asia/Kolkata')
@@ -108,6 +103,9 @@ def upload_doc(request):
                 file=file_base64,
                 status='inqueue'
             )
+
+            redis_client.publish(channel, doc_id)
+
             return JsonResponse({'message': 'File uploaded successfully'})
         else:
             return JsonResponse({'error': 'No file provided'}, status=400)

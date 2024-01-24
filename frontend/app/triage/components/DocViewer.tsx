@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import PdfViewer from "./PdfViewer";
 import Image from "next/image";
 
-function DocViewer({ doc_id }) {
+function DocViewer({ doc_id, boxLocation }) {
   const [isPdf, setIsPdf] = useState(false);
   const fileUrl = `http://localhost:8000/db_connect/get-document/${doc_id}`;
 
@@ -24,7 +24,7 @@ function DocViewer({ doc_id }) {
   return (
     <div className="w-[70vw] border border-r-black">
       {isPdf ? (
-        <PdfViewer file_path={fileUrl} />
+        <PdfViewer file={fileUrl} boxLocation={boxLocation}/>
       ) : (
         <Image
           className="w-full max-h-[89vh] object-contain"

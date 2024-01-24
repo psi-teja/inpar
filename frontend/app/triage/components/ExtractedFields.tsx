@@ -1,11 +1,12 @@
 // components/ExtractedFields.js
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 
-const ExtractedFields = ({ doc_id }) => {
+const ExtractedFields = ({ doc_id, handleClick }) => {
   const [extractedData, setExtractedData] = useState(require("./dummy.json"));
   const [nodata, setNoData] = useState(false);
   const [isLoading, setLoading] = useState(true);
   const [changed, setChanged] = useState(false);
+  const [selectedField, setSelectedField] = useState(null);
 
   const handleFieldChange = (fieldName, updatedValue) => {
     setExtractedData((prevValues) => {
@@ -31,7 +32,7 @@ const ExtractedFields = ({ doc_id }) => {
 
   const handleSave = async () => {
     try {
-      const response = await fetch(`http://127.0.0.1:8000/db_connect/save_data/${doc_id}`, {
+      const response = await fetch(`http://127.0.0.1:8000/db_connect/data_table/save_data/${doc_id}`, {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -50,8 +51,31 @@ const ExtractedFields = ({ doc_id }) => {
     }
   };
 
+  const handleDiscard = async () => {
+    fetch(`http://127.0.0.1:8000/db_connect/data_table/get_data/${doc_id}`)
+      .then((res) => res.json())
+      .then((data) => {
+        // console.log(data)
+        if (data && data.doc_json_gt) {
+          setExtractedData(data.doc_json_gt);
+        }
+        else if (data && data.doc_json_ai) {
+          setExtractedData(data.doc_json_ai);
+        }
+        else{
+          setNoData(true)
+        }
+        setLoading(false);
+        setChanged(false);
+      })
+      .catch((error) => {
+        console.error("Error fetching data:", error);
+        setLoading(false);
+      });
+  };
+
   useEffect(() => {
-    fetch(`http://127.0.0.1:8000/db_connect/data_table/${doc_id}`)
+    fetch(`http://127.0.0.1:8000/db_connect/data_table/get_data/${doc_id}`)
       .then((res) => res.json())
       .then((data) => {
         // console.log(data)
@@ -70,18 +94,21 @@ const ExtractedFields = ({ doc_id }) => {
         console.error("Error fetching data:", error);
         setLoading(false);
       });
-  }, []);
+  }, [doc_id]);
 
   const renderField = (fieldName, fieldValue) => {
     if (fieldName?.toLowerCase() === "filename") {
       return null; // Do not render for fieldName "filename"
     }
-    if (!Array.isArray(fieldValue)){
+    if (fieldName !== 'Table'){
 
       return (
         <div
-          className="mb-4 border p-2 rounded-md shadow-md transition duration-300 ease-in-out hover:shadow-lg bg-white"
+          className={`mb-4 cursor-default border p-2 rounded-md shadow-md transition duration-300 ease-in-out hover:shadow-lg ${
+            selectedField === fieldName ? 'bg-red-200' : 'bg-white'
+          }`}
           key={fieldName}
+          onClick={(location) => {handleClick(fieldValue.location); setSelectedField(fieldName)}}
         >
           <p className="text-lg font-semibold mb-2 text-indigo-700">
             {fieldName}
@@ -109,19 +136,18 @@ const ExtractedFields = ({ doc_id }) => {
 
   return (
     <div className="bg-white w-[30vw] text-center shadow-lg bg-gray-300">
-      {/* <h2 className="text-2xl font-bold text-gray-100 bg-gradient-to-r from-blue-500 to-blue-700 text-white py-3 rounded-md mb-4">
-        Extracted Fields
-      </h2> */}
       {isLoading && <p className="text-gray-500 p-1">Loading...</p>}
       {nodata && <p className="text-red-400 p-1">No Extracted Data Found</p>}
       {changed && (
-        <p className="p-2 flex justify-center space-x-4">
-          <button onClick={handleSave} className="bg-green-600 hover:bg-green-800 text-white py-1 px-6 rounded-md transition duration-300 ease-in-out focus:outline-none focus:ring focus:border-blue-300">
+        <p className="p-2 flex justify-center text-auto items-center space-x-4">
+          <button onClick={handleSave} className="bg-green-600 hover:bg-green-800 text-white sm:px-2 md:px-2 lg:px-3 xl:px-4 sm:text-xs md:text-xs lg:text-lg xl:text-lg rounded-md transition duration-300 ease-in-out focus:outline-none focus:ring focus:border-blue-300">
             Save
           </button>
-          <button className="bg-red-500 hover:bg-red-700 text-white py-1 px-6 rounded-md transition duration-300 ease-in-out focus:outline-none focus:ring focus:border-blue-300">
+          <p className="">/</p>
+          <button onClick={handleDiscard} className="bg-red-500 hover:bg-red-700 text-white sm:px-2 md:px-2 lg:px-3 xl:px-4 sm:text-xs md:text-xs lg:text-lg xl:text-lg rounded-md transition duration-300 ease-in-out focus:outline-none focus:ring focus:border-blue-300">
             Discard
           </button>
+          <p className="text-xs">changes</p>
         </p>
       )}
       <div className="h-[86vh] overflow-y-auto shadow-xl ">
