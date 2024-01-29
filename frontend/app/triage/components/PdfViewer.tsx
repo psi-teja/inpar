@@ -13,7 +13,6 @@ function PdfViewer({ file , boxLocation }: { file: string, boxLocation: object }
   const [scale, setScale] = useState(1);
   const [pdfDim, setPdfDim] = useState({ width: 0, height: 0 });
   const boundingBoxRef =  useRef<HTMLDivElement | null>(null);
-  const [prevPageNumber, setPrevPageNumber] = useState<number | null>(null);
   
 
   useEffect(() => {
@@ -99,7 +98,7 @@ function PdfViewer({ file , boxLocation }: { file: string, boxLocation: object }
 
   return (
     <div>
-      <div className="flex justify-between items-center text-xs bg-slate-300">
+      <div className="flex justify-between text-xs items-center bg-slate-300">
         <div className="flex items-center">
           <button
             className="p-1 m-1 btn-nav hover:bg-blue-600 rounded hover:text-white"
@@ -108,12 +107,12 @@ function PdfViewer({ file , boxLocation }: { file: string, boxLocation: object }
           >
             &lt;&lt; Previous
           </button>
-          <div className="m-1 ml-8 rounded-lg border-2 hover:border-blue-400">
+          <div className="sm:ml-1 md:ml-2 lg:ml-3 xl:ml-4 rounded-lg border-2  hover:border-blue-400 flex items-center">
             <button
               onClick={() =>
                 handleScaleChange({ target: { value: scale - 0.1 } })
               }
-              className="text-lg hover:bg-blue-600 hover:text-white bg-gray-200 px-2 mr-2 rounded-l-md cursor-pointer transition-all duration-300 ease-in-out"
+              className="hover:bg-blue-600 hover:text-white bg-gray-200 px-2 mr-2 rounded-l-md cursor-pointer transition-all duration-300 ease-in-out"
             >
               -
             </button>
@@ -130,7 +129,7 @@ function PdfViewer({ file , boxLocation }: { file: string, boxLocation: object }
               onClick={() => 
                 handleScaleChange({ target: { value: scale + 0.1 } })
               }
-              className="text-lg hover:bg-blue-600 hover:text-white bg-gray-200 px-2 ml-2 rounded-r-md cursor-pointer transition-all duration-300 ease-in-out"
+              className="hover:bg-blue-600 hover:text-white bg-gray-200 px-2 ml-2 rounded-r-md cursor-pointer transition-all duration-300 ease-in-out"
             >
               +
             </button>
@@ -141,7 +140,7 @@ function PdfViewer({ file , boxLocation }: { file: string, boxLocation: object }
             type="number"
             value={pageNumber}
             onChange={handlePageNumberChange}
-            className="w-16 p-1 text-center border-1 rounded focus:outline-none focus:border-blue-500"
+            className="w-12 text-center border-1 p-1 m-1 rounded focus:outline-none focus:border-blue-500"
           />
           / {numPages}
         </span>

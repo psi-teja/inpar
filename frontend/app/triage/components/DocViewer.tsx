@@ -22,7 +22,7 @@ function DocViewer({ doc_id, boxLocation }) {
   }, [fileUrl]);
 
   return (
-    <div className="w-[70vw] border border-r-black">
+    <div className="w-[70vw] border border-r-blue-600">
       {isPdf ? (
         <PdfViewer file={fileUrl} boxLocation={boxLocation}/>
       ) : (

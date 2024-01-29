@@ -104,13 +104,13 @@ const ExtractedFields = ({ doc_id, handleClick }) => {
 
       return (
         <div
-          className={`mb-4 cursor-default border p-2 rounded-md shadow-md transition duration-300 ease-in-out hover:shadow-lg ${
+          className={`m-1 cursor-default border p-2 rounded-md shadow-md transition duration-300 ease-in-out hover:shadow-lg ${
             selectedField === fieldName ? 'bg-red-200' : 'bg-white'
           }`}
           key={fieldName}
           onClick={(location) => {handleClick(fieldValue.location); setSelectedField(fieldName)}}
         >
-          <p className="text-lg font-semibold mb-2 text-indigo-700">
+          <p className="font-semibold mb-2 text-indigo-700">
             {fieldName}
           </p>
           <textarea
@@ -150,7 +150,7 @@ const ExtractedFields = ({ doc_id, handleClick }) => {
           <p className="text-xs">changes</p>
         </p>
       )}
-      <div className="h-[86vh] overflow-y-auto shadow-xl ">
+      <div className="h-[86vh] overflow-y-auto shadow-xl sm:text-xs md:text-md lg:text-lg xl:text-xl">
         {Object.entries(extractedData).map(([fieldName, fieldValue]) =>
           renderField(fieldName, fieldValue)
         )}
