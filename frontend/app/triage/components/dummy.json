@@ -1,0 +1,991 @@
+{
+    "SupplierContactNo" :
+        {
+        "text": "",
+        "location": {
+            "pageNo": 0,
+            "ltwh": [
+                0,
+                0,
+                0,
+                0
+            ]
+        }
+    },
+    "BuyerContactNo":
+        {
+        "text": "",
+        "location": {
+            "pageNo": 0,
+            "ltwh": [
+                0,
+                0,
+                0,
+                0
+            ]
+        }
+    },
+    "SupplierPAN": {
+        "text": "",
+        "location": {
+            "pageNo": 0,
+            "ltwh": [
+                0,
+                0,
+                0,
+                0
+            ]
+        }
+    },
+    "BuyerPAN":
+        {
+        "text": "",
+        "location": {
+            "pageNo": 0,
+            "ltwh": [
+                0,
+                0,
+                0,
+                0
+            ]
+        }
+    },
+    "InvoiceID": 
+        {
+            "text": "",
+            "location": {
+                "pageNo": 0,
+                "ltwh": [
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            }
+        }
+    ,
+    "InvoiceDate": 
+        {
+            "text": "",
+            "location": {
+                "pageNo": 0,
+                "ltwh": [
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            }
+        }
+    ,
+    "SupplierName": 
+        {
+            "text": "",
+            "location": {
+                "pageNo": 0,
+                "ltwh": [
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            }
+        }
+    ,
+    "SupplierAddress": 
+        {
+            "text": "",
+            "location": {
+                "pageNo": 0,
+                "ltwh": [
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            }
+        }
+    ,
+    "SupplierGSTIN": 
+        {
+            "text": "",
+            "location": {
+                "pageNo": 0,
+                "ltwh": [
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            }
+        },
+    "BuyerName": 
+        {
+            "text": "",
+            "location": {
+                "pageNo": 0,
+                "ltwh": [
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            }
+        }
+    ,
+    "BuyerAddress": 
+        {
+            "text": "",
+            "location": {
+                "pageNo": 0,
+                "ltwh": [
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            }
+        }
+    ,
+    "BuyerGSTIN": 
+        {
+            "text": "",
+            "location": {
+                "pageNo": 0,
+                "ltwh": [
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            }
+        }
+    ,
+    "ConsigneeAddress": 
+        {
+            "text": "",
+            "location": {
+                "pageNo": 0,
+                "ltwh": [
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            }
+        }
+    ,
+    "ConsigneeName": 
+        {
+            "text": "",
+            "location": {
+                "pageNo": 0,
+                "ltwh": [
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            }
+        }
+    ,
+    "ConsigneeGSTIN": 
+        {
+            "text": "",
+            "location": {
+                "pageNo": 0,
+                "ltwh": [
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            }
+        }
+    ,
+    "TotalAmount": 
+        {
+            "text": "",
+            "location": {
+                "pageNo": 0,
+                "ltwh": [
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            }
+        }
+    ,
+    "Table": [
+        {
+            "SrNo": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "Description": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "Quantity": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "Rate": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "Discount": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "Amount": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "HSN": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "MRP": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "CGSTValue": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "SGSTValue": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "CGSTRate": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "SGSTRate": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "BatchNo": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "Godown": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "ExpiryDate": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            }
+        },
+        {   
+            "SrNo": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "Description": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "Quantity": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "Rate": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "Discount": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "Amount": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "HSN": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "MRP": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "CGSTValue": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "SGSTValue": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "CGSTRate": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "SGSTRate": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "BatchNo": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "Godown": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "ExpiryDate": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            }
+        },
+        {   
+            "SrNo": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "Description": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "Quantity": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "Rate": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "Discount": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "Amount": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "HSN": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "MRP": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "CGSTValue": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "SGSTValue": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "CGSTRate": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "SGSTRate": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "BatchNo": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "Godown": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "ExpiryDate": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            }
+        }
+        ,{   
+            "SrNo": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "Description": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "Quantity": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "Rate": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "Discount": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "Amount": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "HSN": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "MRP": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "CGSTValue": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "SGSTValue": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "CGSTRate": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "SGSTRate": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "BatchNo": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "Godown": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            },
+            "ExpiryDate": {
+                "text": "",
+                "location": {
+                    "pageNo": 1,
+                    "ltwh": [
+                        0,
+                        0,
+                        0,
+                        0
+                    ]
+                }
+            }
+        }
+    ],
+    "SupplierEmail": 
+        {
+            "text": "",
+            "location": {
+                "pageNo": 0,
+                "ltwh": [
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            }
+        }
+    ,
+    "BuyerEmail": 
+        {
+            "text": "",
+            "location": {
+                "pageNo": 0,
+                "ltwh": [
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            }
+        }
+    ,
+    "ConsigneeEmail": 
+        {
+            "text": "",
+            "location": {
+                "pageNo": 0,
+                "ltwh": [
+                    0,
+                    0,
+                    0,
+                    0
+                ]
+            }
+        }
+}
