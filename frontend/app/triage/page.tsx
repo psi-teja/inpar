@@ -15,11 +15,12 @@ export default function Triage() {
 function TriageContent() {
   const searchParams = useSearchParams();
   const doc_id = searchParams.get('doc_id');
+  const json_type = searchParams.get('json_type')
 
   return (
     <main className=''>
       <TriageHeader doc_id={doc_id} />
-      <InteractiveSpace doc_id={doc_id} />
+      <InteractiveSpace doc_id={doc_id} json_type={json_type}/>
     </main>
   );
 }

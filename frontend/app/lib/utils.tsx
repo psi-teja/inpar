@@ -1,5 +1,0 @@
-const DOWNLOAD_URL = ''
-
-
-
-

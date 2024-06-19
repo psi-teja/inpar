@@ -1,0 +1,5 @@
+torch
+pdf2image
+redis
+flask
+opencv2-python

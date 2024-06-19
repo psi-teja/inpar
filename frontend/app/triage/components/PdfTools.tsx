@@ -28,7 +28,7 @@ const PdfTools: React.FC<PdfToolsProps> = ({
         id="scaleSlider"
         type="range"
         min="0.1"
-        max="2"
+        max="4"
         step="0.1"
         value={scale}
         onChange={handleScaleChange}
@@ -44,6 +44,7 @@ const PdfTools: React.FC<PdfToolsProps> = ({
       </div>
       <div
         className="hover:bg-gray-200 rounded mr-4"
+        title="Download File" 
         onClick={() => downloadFile(file, docType)}
       >
         <svg

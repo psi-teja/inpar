@@ -1,14 +1,16 @@
 "use client";
 import Link from "next/link";
 import Image from "next/image";
-import { useState } from "react";
+import { useState, ChangeEvent } from "react";
+import BACKEND_URLS from "../BackendUrls";
 
 function HomeHeader() {
   const [isLoading, setIsLoading] = useState(false);
 
-  const handleFileUpload = async (event) => {
-    const file = event.target.files[0];
-    if (file) {
+  const handleFileUpload = async (event: ChangeEvent<HTMLInputElement>) => {
+    const files = event.target.files;
+    if (files && files.length > 0) {
+      const file = files[0];
       const formData = new FormData();
       formData.append("document", file);
 
@@ -16,7 +18,7 @@ function HomeHeader() {
         setIsLoading(true); // Set loading state to true
 
         const response = await fetch(
-          "https://loqc5abj3t6z2crtwezyyxcsae0zsxmz.lambda-url.ap-south-1.on.aws/upload/doc",
+          BACKEND_URLS.uploadDocUrl,
           {
             method: "POST",
             body: formData,

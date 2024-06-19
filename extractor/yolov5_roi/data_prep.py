@@ -1,6 +1,7 @@
 import os
 import json
 from shutil import copyfile
+from tqdm import tqdm
 from PyPDF2 import PdfReader
 from pdf2image import convert_from_path
 import json, random, shutil, yaml
@@ -25,10 +26,14 @@ label_encoder = YOLOv5LabelEncoder()
 
 # Variables to store the number of samples and label counts
 num_of_samples = 0
+missing_jsons = []
 label_count = {}
 
+doc_list = os.listdir(doc_folder)
+
 # Loop through documents in doc_folder
-for doc_name in os.listdir(doc_folder):
+for i in tqdm(range(len(doc_list)), unit="sample"):
+    doc_name = doc_list[i]
     doc_path = os.path.join(doc_folder, doc_name)
     roi_json_path = os.path.join(roi_json_folder, doc_name.split(".")[0] + "_ROI.json")
     
@@ -43,14 +48,21 @@ for doc_name in os.listdir(doc_folder):
             # Loop through each page of the PDF
             for page_num in range(len(pdf_reader.pages)):
 
-                file = open(os.path.join(labels_folder, f"{doc_name.split('.')[0]}_page{page_num+1}.txt"), "w")
+                label_file = open(os.path.join(labels_folder, f"{doc_name.split('.')[0]}_page{page_num+1}.txt"), "w")
 
                 # Extract each page as an image
                 page_image = convert_from_path(doc_path, first_page=page_num+1, last_page=page_num+1)[0]
                 # Save the page image to images_folder
                 page_image.save(os.path.join(images_folder, f"{doc_name.split('.')[0]}_page{page_num+1}.jpg"))
         
-                roi_data_page = roi_data[page_num]["ROI"]
+                
+                try:
+                    roi_data_page = roi_data[page_num]["ROI"]
+                    num_of_samples += 1
+                except:
+                    missing_jsons.append(f"{doc_name.split('.')[0]}_page{page_num+1}")
+                    label_file.close()
+                    continue
 
                 for label_dict in roi_data_page:
                     
@@ -64,16 +76,16 @@ for doc_name in os.listdir(doc_folder):
                         label_encoder.add_label(label)
                         l, t, w, h = label_dict[label]['location']['ltwh']
                         x,y = l + w/2, t + h/2
-                        file.write(f"{label_encoder.get_label_id(label)} {x} {y} {w} {h}\n")
-                num_of_samples += 1
-                file.close()
+                        label_file.write(f"{label_encoder.get_label_id(label)} {x} {y} {w} {h}\n")
+                
+                label_file.close()
         
     elif doc_name.endswith((".jpeg", ".png", ".jpg")):
         # Image processing logic
         # Copy the image to images_folder
         copyfile(doc_path, os.path.join(images_folder, doc_name))
 
-        file = open(os.path.join(labels_folder, f"{doc_name.split('.')[0]}.txt"), "w")
+        label_file = open(os.path.join(labels_folder, f"{doc_name.split('.')[0]}.txt"), "w")
 
         roi_data_page = roi_data[0]["ROI"]
 
@@ -89,9 +101,9 @@ for doc_name in os.listdir(doc_folder):
                 label_encoder.add_label(label)
                 l, t, w, h = label_dict[label]['location']['ltwh']
                 x,y = l + w/2, t + h/2
-                file.write(f"{label_encoder.get_label_id(label)} {x} {y} {w} {h}\n")
+                label_file.write(f"{label_encoder.get_label_id(label)} {x} {y} {w} {h}\n")
         num_of_samples += 1
-        file.close()
+        label_file.close()
 
         num_of_samples +=1
     else:
@@ -158,5 +170,5 @@ yml_data = {
 }
 
 yml_file_path = os.path.join(dataset_folder, "roi.yml")
-with open(yml_file_path, 'w') as file:
-    yaml.dump(yml_data, file)
+with open(yml_file_path, 'w') as label_file:
+    yaml.dump(yml_data, label_file)

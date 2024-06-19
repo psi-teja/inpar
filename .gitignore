@@ -134,3 +134,5 @@ dist
 **/.next/*
 **/datasets/**
 **/results/**
+**/input_docs/**
+**/output_jsons/**

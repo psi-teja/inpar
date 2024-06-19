@@ -1,0 +1,880 @@
+{
+        "InvoiceDate": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "InvoiceNumber": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "DocumentType": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "OrderNumber": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "ReferenceNumber": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "BuyerOrderDate": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "OrderDueDate": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "TermsofPayment": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "DispatchThrough": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "Destination": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "OtherReference": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "PortofDischarge": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "PortofLoading": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "BuyerName": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "BuyerAddress": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "BuyerState": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "BuyerPAN": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "BuyerContactNo": 
+                {
+                        "text": "",
+                        "location": {
+                                "pageNo": 0,
+                                "ltwh": [
+                                        0,
+                                        0,
+                                        0,
+                                        0
+                                ]
+                        }
+                }
+        ,
+        "BuyerEmail": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "BuyerGSTIN": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "ConsigneeName": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "ConsigneeAddress": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "ConsigneeState": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "ConsigneeEmail": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [       
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "ConsigneeContactNo": 
+                {
+                        "text": "",
+                        "location": {
+                                "pageNo": 0,
+                                "ltwh": [
+                                        0,
+                                        0,
+                                        0,
+                                        0
+                                ]
+                        }
+                }
+        ,
+        "ConsigneePAN": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "ConsigneeGSTIN": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "SupplierName": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "SupplierAddress": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "SupplierState": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "SupplierGSTIN": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "SupplierPAN": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "SupplierEmail": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "SupplierContactNo": 
+                {
+                        "text": "",
+                        "location": {
+                                "pageNo": 0,
+                                "ltwh": [
+                                        0,
+                                        0,
+                                        0,
+                                        0
+                                ]
+                        }
+                }
+        ,
+        "Currency": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "TotalCGSTRate": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "TotalSGSTRate": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "TotalIGSTRate": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "TotalTaxRate": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "TotalCGSTAmount": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "TotalSGSTAmount": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "TotalIGSTAmount": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "TotalTaxAmount": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "TotalAmount": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "SubAmount": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "TotalDiscount": {
+                "text": "",
+                "location": {
+                        "pageNo": 0,
+                        "ltwh": [
+                                0,
+                                0,
+                                0,
+                                0
+                        ]
+                }
+        },
+        "Table": [
+                {
+                        "ItemBox": {
+                                "text": "",
+                                "location": {
+                                        "pageNo": 0,
+                                        "ltwh": [
+                                                0,
+                                                0,
+                                                0,
+                                                0
+                                        ]
+                                }
+                        },
+                        "ItemName": {
+                                "text": "",
+                                "location": {
+                                        "pageNo": 0,
+                                        "ltwh": [
+                                                0,
+                                                0,
+                                                0,
+                                                0
+                                        ]
+                                }
+                        },
+                        "ItemDescription": {
+                                "text": "",
+                                "location": {
+                                        "pageNo": 0,
+                                        "ltwh": [
+                                                0,
+                                                0,
+                                                0,
+                                                0
+                                        ]
+                                }
+                        },
+                        "ActualQty": {
+                                "text": "",
+                                "location": {
+                                        "pageNo": 0,
+                                        "ltwh": [
+                                                0,
+                                                0,
+                                                0,
+                                                0
+                                        ]
+                                }
+                        },
+                        "BilledQty": {
+                                "text": "",
+                                "location": {
+                                        "pageNo": 0,
+                                        "ltwh": [
+                                                0,
+                                                0,
+                                                0,
+                                                0
+                                        ]
+                                }
+                        },
+                        "ItemRate": {
+                                "text": "",
+                                "location": {
+                                        "pageNo": 0,
+                                        "ltwh": [
+                                                0,
+                                                0,
+                                                0,
+                                                0
+                                        ]
+                                }
+                        },
+                        "ItemRateUOM": {
+                                "text": "",
+                                "location": {
+                                        "pageNo": 0,
+                                        "ltwh": [
+                                                0,
+                                                0,
+                                                0,
+                                                0
+                                        ]
+                                }
+                        },
+                        "DiscountAmount": {
+                                "text": "",
+                                "location": {
+                                        "pageNo": 0,
+                                        "ltwh": [
+                                                0,
+                                                0,
+                                                0,
+                                                0
+                                        ]
+                                }
+                        },
+                        "DiscountRate": {
+                                "text": "",
+                                "location": {
+                                        "pageNo": 0,
+                                        "ltwh": [
+                                                0,
+                                                0,
+                                                0,
+                                                0
+                                        ]
+                                }
+                        },
+                        "ItemAmount": {
+                                "text": "",
+                                "location": {
+                                        "pageNo": 0,
+                                        "ltwh": [
+                                                0,
+                                                0,
+                                                0,
+                                                0
+                                        ]
+                                }
+                        },
+                        "HSNSACCode": {
+                                "text": "",
+                                "location": {
+                                        "pageNo": 0,
+                                        "ltwh": [
+                                                0,
+                                                0,
+                                                0,
+                                                0
+                                        ]
+                                }
+                        },
+                        "CGSTRate": {
+                                "text": "",
+                                "location": {
+                                        "pageNo": 0,
+                                        "ltwh": [
+                                                0,
+                                                0,
+                                                0,
+                                                0
+                                        ]
+                                }
+                        },
+                        "SGSTRate": {
+                                "text": "",
+                                "location": {
+                                        "pageNo": 0,
+                                        "ltwh": [
+                                                0,
+                                                0,
+                                                0,
+                                                0
+                                        ]
+                                }
+                        },
+                        "IGSTRate": {
+                                "text": "",
+                                "location": {
+                                        "pageNo": 0,
+                                        "ltwh": [
+                                                0,
+                                                0,
+                                                0,
+                                                0
+                                        ]
+                                }
+                        },
+                        "TaxRate": {
+                                "text": "",
+                                "location": {
+                                        "pageNo": 0,
+                                        "ltwh": [
+                                                0,
+                                                0,
+                                                0,
+                                                0
+                                        ]
+                                }
+                        },
+                        "CGSTAmount": {
+                                "text": "",
+                                "location": {
+                                        "pageNo": 0,
+                                        "ltwh": [
+                                                0,
+                                                0,
+                                                0,
+                                                0
+                                        ]
+                                }
+                        },
+                        "SGSTAmount": {
+                                "text": "",
+                                "location": {
+                                        "pageNo": 0,
+                                        "ltwh": [
+                                                0,
+                                                0,
+                                                0,
+                                                0
+                                        ]
+                                }
+                        },
+                        "IGSTAmount": {
+                                "text": "",
+                                "location": {
+                                        "pageNo": 0,
+                                        "ltwh": [
+                                                0,
+                                                0,
+                                                0,
+                                                0
+                                        ]
+                                }
+                        },
+                        "TaxAmount": {
+                                "text": "",
+                                "location": {
+                                        "pageNo": 0,
+                                        "ltwh": [
+                                                0,
+                                                0,
+                                                0,
+                                                0
+                                        ]
+                                },
+                                "CGSTRate": {
+                                        "text": "",
+                                        "location": {
+                                                "pageNo": 0,
+                                                "ltwh": [
+                                                        0,
+                                                        0,
+                                                        0,
+                                                        0
+                                                ]
+                                        }
+                                },
+                                "SGSTRate": {
+                                        "text": "",
+                                        "location": {
+                                                "pageNo": 0,
+                                                "ltwh": [
+                                                        0,
+                                                        0,
+                                                        0,
+                                                        0
+                                                ]
+                                        }
+                                },
+                                "IGSTRate": {
+                                        "text": "",
+                                        "location": {
+                                                "pageNo": 0,
+                                                "ltwh": [
+                                                        0,
+                                                        0,
+                                                        0,
+                                                        0
+                                                ]
+                                        }
+                                },
+                                "TaxRate": {
+                                        "text": "",
+                                        "location": {
+                                                "pageNo": 0,
+                                                "ltwh": [
+                                                        0,
+                                                        0,
+                                                        0,
+                                                        0
+                                                ]
+                                        }
+                                }
+                        }
+                }
+        ],
+        "LedgerDetails": [
+                {
+                        "LedgerName": {
+                                "text": "",
+                                "location": {
+                                        "pageNo": 0,
+                                        "ltwh": [
+                                                0,
+                                                0,
+                                                0,
+                                                0
+                                        ]
+                                }
+                        },
+                        "LedgerRate": {
+                                "text": "",
+                                "location": {
+                                        "pageNo": 0,
+                                        "ltwh": [
+                                                0,
+                                                0,
+                                                0,
+                                                0
+                                        ]
+                                }
+                        },
+                        "LedgerAmount": {
+                                "text": "",
+                                "location": {
+                                        "pageNo": 0,
+                                        "ltwh": [
+                                                0,
+                                                0,
+                                                30,
+                                                0
+                                        ]
+                                }
+                        }
+                }
+        ]
+}

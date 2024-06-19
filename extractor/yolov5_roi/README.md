@@ -38,7 +38,19 @@ python data_prep.py
 ### 3. Model Training
 
 ```bash
-python yolov5/train.py --data datasets/imerit/roi.yml --weights yolov5m.pt --img 640 --project results/runs
+# On CPU
+python yolov5/train.py --data datasets/imerit/roi.yml --weights yolov5s.pt --img 640 --project results/runs
 ```
+
+```bash
+# DDP training on 8 NVIDIA A10G GPUs machine
+python -m torch.distributed.run --nproc_per_node 8 yolov5/train.py --batch 64 --data datasets/imerit/roi.yml --weights yolov5s.pt --project results/runs --device 0,1,2,3,4,5,6,7
+```
+
+```bash
+# DP training on 1 NVIDIA T1000 GPU machine
+python yolov5/train.py --img 640 --batch 16 --epochs 50 --data datasets/imerit/roi.yml --weights yolov5s.pt --project results/runs --device 0
+```
+
 
 Training results are stored in `results/runs/exp{i}`, where i is a sequential number starting from 1.

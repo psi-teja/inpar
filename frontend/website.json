@@ -1,0 +1,8 @@
+{
+    "IndexDocument": {
+        "Suffix": "frontend/server/app/index.html"
+    },
+    "ErrorDocument": {
+        "Key": "error.html"
+    }
+}

@@ -1,16 +1,45 @@
 import React, { useEffect, useState } from "react";
-import FileSaver from 'file-saver';
+import FileSaver from "file-saver";
 import PdfViewer from "./PdfViewer";
-
+import BACKEND_URLS from "@/app/BackendUrls";
 
 interface DocViewerProps {
   doc_id: string | null;
   boxLocation: Record<string, any> | null; // Define the type for boxLocation
   viewType: string; // Define the type for viewType
+  handleSingleValuedFieldChange: (
+    fieldName: string | null,
+    value: string | null,
+    location: Record<string, any> | null,
+    instruction: string
+  ) => void;
+  handleNestedFieldChange: (
+    fieldType:string,
+    index: number | null,
+    field: string | null,
+    value: string | null,
+    location: Record<string, any> | null,
+    instruction: string
+  ) => void;
+  selectedField: string | null;
+  selectedRow: number | null;
+  dataChanged: boolean;
 }
 
-const DocViewer: React.FC<DocViewerProps> = ({ doc_id, boxLocation, viewType }) => {
-  const fileUrl = `http://localhost:8000/db_connect/get-document/${doc_id}`;
+const DocViewer: React.FC<DocViewerProps> = ({
+  doc_id,
+  boxLocation,
+  viewType,
+  handleSingleValuedFieldChange,
+  handleNestedFieldChange,
+  selectedField,
+  selectedRow,
+  dataChanged,
+}) => {
+  const fileUrl = `${BACKEND_URLS.getDocUrl}/${doc_id}`;
+
+  // const fileUrl = './document.pdf';
+  
 
   const downloadFile = (file: string, docType: string) => {
     fetch(file)
@@ -19,7 +48,7 @@ const DocViewer: React.FC<DocViewerProps> = ({ doc_id, boxLocation, viewType }) 
         FileSaver.saveAs(blob, `${doc_id}.${docType}`);
       })
       .catch((error) => {
-        console.error('Error downloading file:', error);
+        console.error("Error downloading file:", error);
       });
   };
 
@@ -29,14 +58,19 @@ const DocViewer: React.FC<DocViewerProps> = ({ doc_id, boxLocation, viewType }) 
         viewType === "DocInfo" ? "w-[70vw]" : ""
       } border border-blue-400`}
     >
-        <PdfViewer
-          file={fileUrl}
-          boxLocation={boxLocation}
-          viewType={viewType}
-          downloadFile={downloadFile}
-        />
+      <PdfViewer
+        file={fileUrl}
+        boxLocation={boxLocation}
+        viewType={viewType}
+        downloadFile={downloadFile}
+        handleSingleValuedFieldChange={handleSingleValuedFieldChange}
+        handleNestedFieldChange={handleNestedFieldChange}
+        selectedField={selectedField}
+        dataChanged={dataChanged}
+        selectedRow={selectedRow}
+      />
     </div>
   );
-}
+};
 
 export default DocViewer;

@@ -2,7 +2,7 @@ from torch.utils.data import Dataset
 import os, json, boto3
 from PIL import Image
 import numpy as np
-import cv2
+import cv2, io
 from transformers import LayoutLMv3Processor, LayoutLMv3Tokenizer
 import math, torch
 
@@ -11,6 +11,62 @@ processor_with_ocr = LayoutLMv3Processor.from_pretrained("microsoft/layoutlmv3-b
 tokenizer = LayoutLMv3Tokenizer.from_pretrained("microsoft/layoutlmv3-base")
 
 device = torch.device('cuda:0' if torch.cuda.is_available() else 'cpu')
+
+class ProcessorWithAWSOCR:
+    def __init__(self) -> None:
+        self.textract = boto3.client("textract", region_name="ap-south-1")
+
+    def get_ocr_data(self, imageBytes):
+        response = self.textract.detect_document_text(Document={"Bytes": imageBytes})
+        texts = []
+        bboxes = []
+        for item in response["Blocks"]:
+            if item["BlockType"] == "LINE":
+                texts.append(item["Text"])
+                bboxes.append(
+                    [
+                        item["Geometry"]["BoundingBox"]["Left"],
+                        item["Geometry"]["BoundingBox"]["Top"],
+                        item["Geometry"]["BoundingBox"]["Width"],
+                        item["Geometry"]["BoundingBox"]["Height"],
+                    ]
+                )
+        return {"texts": texts, "bboxes_ltwh": bboxes}
+
+    def get_encodings(self, pil_image):
+        # Convert PIL image to bytes
+        img_byte_arr = io.BytesIO()
+        pil_image.save(img_byte_arr, format='PNG')
+        image_bytes = img_byte_arr.getvalue()
+        
+        # Get OCR data from AWS Textract
+        ocr_data = self.get_ocr_data(image_bytes)
+
+        scaled_bboxes_xyxy = []
+
+        for bbox in ocr_data["bboxes_ltwh"]:
+            l, t, w, h = bbox
+
+            scaled_x1 = int(l*1000)
+            scaled_y1 = int(t*1000)
+            scaled_x2 = int((l+w)*1000)
+            scaled_y2 = int((t+h)*1000)
+
+            scaled_bboxes_xyxy.append([scaled_x1, scaled_y1, scaled_x2, scaled_y2])
+
+        
+        # Get encodings using the processor without built-in OCR
+        encodings = processor_without_ocr(pil_image, 
+                                          text=ocr_data['texts'], 
+                                          boxes=scaled_bboxes_xyxy,
+                                          truncation=True,
+                                            return_tensors="pt")
+        return encodings
+
+
+
+
+
 
 class colors:
     PURPLE = '\033[95m'
@@ -238,16 +294,12 @@ def fraction_to_ratio(numerator, denominator):
 
 
 if __name__ == "__main__":
-    iou = calculate_ioa(0, 0, 2, 2, 1, 1, 0.5, 0.5)
 
-    local_folder_path = "AIBackend/DocAI/inpar-research/layoutLMv3/results/runs/20240422150953"
+    processor = ProcessorWithAWSOCR()   
 
-    # Specify the S3 bucket name
-    bucket_name = "tally-ai-doc-ai-inpar-models"
+    image_path = "AIBackend/DocAI/inpar-research/extractor/layoutLMv3/sample.jpg"
 
-    # Specify the S3 folder path
-    s3_folder_path = "layoutLMv3_finetuned/20240420232435"
+    pil_image = Image.open(image_path)
 
-    upload_folder_to_s3(local_folder_path, bucket_name, s3_folder_path)
-
-    print("IOU:", iou)
+    response = processor.get_encodings(pil_image)
+    print(response)
