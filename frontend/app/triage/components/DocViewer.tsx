@@ -56,7 +56,7 @@ const DocViewer: React.FC<DocViewerProps> = ({
     <div
       className={`${
         viewType === "DocInfo" ? "w-[70vw]" : ""
-      } border border-blue-400`}
+      }`}
     >
       <PdfViewer
         file={fileUrl}

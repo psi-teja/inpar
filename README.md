@@ -52,9 +52,9 @@ The extractor subscribes to the Redis queue and processes invoices using models 
     ```sh
     pip install -r requirements.txt
     ```
-3. Run the extractor:
+3. Run the extractor server:
     ```sh
-    python extractor.py
+    python extractor_server.py
     ```
 
 For detailed documentation, refer to the [README.md](extractor/README.md) file in the `extractor` folder.

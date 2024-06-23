@@ -4,7 +4,7 @@ import sys, os
 
 current_dir = os.path.dirname(__file__)
 sys.path.append(os.path.join(current_dir, "layoutLMv3"))
-from extractor.layoutLMv3.modeling import layoutLMv3
+from layoutLMv3.modeling import layoutLMv3
 import traceback
 
 
@@ -17,10 +17,6 @@ from extractor_utils import (
 )
 import time
 
-
-import pathlib
-
-pathlib.PosixPath = pathlib.Path
 
 field_values_extractor = layoutLMv3()
 roi_extractor = yolov5_roi()
@@ -85,5 +81,4 @@ if __name__ == "__main__":
     tally_ai_json = parse_invoice(pil_image, cv2_image)
     print(tally_ai_json)
     end_time = time.time()
-    # print("output:", tally_ai_json)
     print("Time to run inference code:", end_time - start_time)

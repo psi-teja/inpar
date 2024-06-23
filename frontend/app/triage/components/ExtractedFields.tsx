@@ -133,8 +133,8 @@ const ExtractedFields: React.FC<ExtractedFieldsProps> = ({
             <button
               className={`${
                 viewType === "DocInfo"
-                  ? "bg-gradient-to-b from-blue-600 to-blue-100 border border-blue-500"
-                  : "bg-gray-300 text-gray-400 hover:bg-gradient-to-b from-blue-400 to-blue-100 hover:text-gray-600"
+                  ? "bg-gradient-to-b from-blue-300 to-blue-100"
+                  : "bg-gray-300 text-gray-400 hover:bg-gradient-to-b from-blue-300 to-blue-100 hover:text-gray-500"
               } text-black p-1 ml-1 rounded-t`}
               onClick={() => handleChangeView("DocInfo")}
             >
@@ -143,8 +143,8 @@ const ExtractedFields: React.FC<ExtractedFieldsProps> = ({
             <button
               className={`${
                 viewType === "Table"
-                  ? "bg-gradient-to-b from-blue-600 to-blue-100 border border-blue-500"
-                  : "bg-gray-300 text-gray-400 hover:bg-gradient-to-b from-blue-400 to-blue-100 hover:text-gray-600"
+                  ? "bg-gradient-to-b from-blue-300 to-blue-100 border border-blue-100"
+                  : "bg-gray-300 text-gray-400 hover:bg-gradient-to-b from-blue-300 to-blue-100 hover:text-gray-600"
               } text-black p-1 mr-1 rounded-t`}
               onClick={() => handleChangeView("Table")}
             >
@@ -179,7 +179,7 @@ const ExtractedFields: React.FC<ExtractedFieldsProps> = ({
       <div
         className={`${
           viewType === "DocInfo" ? "h-[74vh] overflow-y-auto" : ""
-        }  border border-blue-400 shadow`}
+        }  border border-blue-100 shadow`}
       >
         {extractedData &&
           Object.entries(extractedData).map(([fieldName, fieldValue]) =>

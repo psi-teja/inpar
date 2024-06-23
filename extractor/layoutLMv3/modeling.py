@@ -10,7 +10,7 @@ os.environ['AWS_PROFILE'] = "Developers_custom1_tallydev-AI-381491826341"
 
 current_dir = os.path.dirname(__file__)
 
-job_dir = os.path.join(current_dir, "results", "runs", "20240614013654")
+job_dir = os.path.join(current_dir, "results", "runs", "20240618233420")
 
 saved_model_dir = os.path.join(job_dir, "saved_model")
 
