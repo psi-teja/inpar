@@ -136,3 +136,6 @@ dist
 **/results/**
 **/input_docs/**
 **/output_jsons/**
+**/extractor/**/*.jpg
+**/extractor/**/*.png
+**/extractor/**/*.jpeg

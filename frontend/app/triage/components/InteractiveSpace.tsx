@@ -219,8 +219,6 @@ const InteractiveSpace: React.FC<InteractiveSpaceProps> = ({
     location: Record<string, any>
   ) => {
 
-    console.log(location)
-
     if (location.pageNo !== 0) {
       setSelectedRow(index);
       setBoxLocation(location);

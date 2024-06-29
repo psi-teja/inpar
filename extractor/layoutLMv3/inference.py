@@ -2,11 +2,9 @@ import torch, json, os
 from transformers import LayoutLMv3ForTokenClassification, LayoutLMv3Config
 from PIL import Image, ImageDraw, ImageFont
 import torch.nn.functional as F
-from layoutLMv3_utils import tokenizer, ProcessorWithAWSOCR
+from layoutLMv3_utils import tokenizer, ProcessorWithAWSOCR, get_avg_conf, get_label_from_sum_conf, processor_with_ocr
 import time
 
-# Set environment variable for AWS profile
-os.environ['AWS_PROFILE'] = "Developers_custom1_tallydev-AI-381491826341"
 
 current_dir = os.path.dirname(__file__)
 
@@ -24,16 +22,17 @@ class layoutLMv3:
         self.model = LayoutLMv3ForTokenClassification(model_config)
         self.model.load_state_dict(torch.load(os.path.join(saved_model_dir, "model.pth"), map_location=torch.device('cpu')))
         self.model.eval()
-        self.processer = ProcessorWithAWSOCR()
+        self.processer = processor_with_ocr
 
     def get_field_values(self, pil_image):
 
         # Preprocess image
-        encodings = self.processer.get_encodings(pil_image)
+        encodings = self.processer(pil_image, truncation=True, return_tensors="pt")
 
         tokens = tokenizer.convert_ids_to_tokens(encodings["input_ids"][0])
 
         draw = ImageDraw.Draw(pil_image)
+        font = ImageFont.load_default()
 
         # Perform token classification
         with torch.no_grad():
@@ -80,14 +79,29 @@ class layoutLMv3:
                 unique_bboxes_xyxy.append([x1,y1,x2,y2])
                 words_in_unique_bboxes.append(words)
 
-                labels_for_unique_bboxes.append(self.model.config.id2label[label_id])
+                label_text = get_label_from_sum_conf(conf_arr)
+                # label_text = self.model.config.id2label[label_id]
+
+                labels_for_unique_bboxes.append(label_text)
                 conf_arr_of_unique_bboxes.append(conf_arr)
 
+
+                x1 *= imgW
+                y1 *= imgH
+                x2 *= imgW
+                y2 *= imgH
+                
+                if label_text != "Other":
+                    draw.rectangle([x1, y1, x2, y2], outline="red", width=2)
+                    draw.text((x1, y1 - 10), f"{label_text}", fill="red", font=font)
+                    # draw.text((x2, y1 + 1), f"{conf_arr}", fill="red", font=font)
+                output_path = os.path.join(current_dir, "token_classication_output.jpg")
+                pil_image.save(output_path)       
 
                 curr_box = box
                 label_index = int(softmax_output.argmax(-1))
                 conf = softmax_output[label_index]
-                conf_arr = [(self.model.config.id2label[label_index], conf.item())]
+                conf_arr = [(label_text, conf.item())]
                 max_conf = conf
                 label_id = label_index
                 segment_tokens = []
@@ -118,6 +132,3 @@ if __name__ == "__main__":
     field_values = layoutLMv3_extractor.get_field_values(pil_image)
     end_time = time.time()
     print("Time to run inference code:", end_time - start_time)
-    with open(os.path.join(current_dir, "sample_output.json"), "w") as json_file:
-        json.dump(field_values, json_file)
-    pil_image.save(os.path.join(current_dir, "sample_output.jpg"))

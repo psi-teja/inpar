@@ -6,7 +6,7 @@ This repository contains scripts and instructions to train a YOLOv5 model for Re
 
 1. Clone this repository:
     ```bash
-    cd AIBackend/DocAI/inpar-research/extractor/yolov5_roi
+    cd AIBackend/DocAI/inpar-research/extractor/yolov5_table
     git clone https://github.com/ultralytics/yolov5.git
     ```
 
@@ -19,12 +19,12 @@ This repository contains scripts and instructions to train a YOLOv5 model for Re
 
 Follow the steps below to run the scripts in the specified order:
 
-### 1. Download ROI Data
+### 1. Generate Ground Truth
 
-Use the `download_roi_safehouse.py` script to download the ROI data from Safehouse.
+Use the `../generate_row_col_dect_gt.py` script to download the ROI data from Safehouse.
 
 ```bash
-python download_roi_safehouse.py
+python ../generate_row_col_dect_gt.py
 ```
 
 ### 2. Data Preparation
@@ -47,17 +47,17 @@ python split_dataset.py
 
 ```bash
 # On CPU
-python yolov5/train.py --data datasets/imerit/roi.yml --weights yolov5s.pt --img 640 --project results/runs
+python yolov5/train.py --data datasets/imerit/row_col.yml --weights yolov5s.pt --img 640 --project results/runs
 ```
 
 ```bash
 # DDP training on 8 NVIDIA A10G GPUs machine
-python -m torch.distributed.run --nproc_per_node 8 yolov5/train.py --batch 64 --data datasets/imerit/roi.yml --weights yolov5s.pt --project results/runs --device 0,1,2,3,4,5,6,7
+python -m torch.distributed.run --nproc_per_node 8 yolov5/train.py --batch 64 --data datasets/imerit/row_cal.yml --weights yolov5s.pt --project results/runs --device 0,1,2,3,4,5,6,7
 ```
 
 ```bash
 # DP training on 1 NVIDIA T1000 GPU machine
-python yolov5/train.py --img 640 --batch 16 --epochs 50 --data datasets/imerit/roi.yml --weights yolov5s.pt --project results/runs --device 0
+python yolov5/train.py --img 640 --batch 16 --epochs 50 --data datasets/imerit/row_col.yml --weights yolov5s.pt --project results/runs --device 0
 ```
 
 

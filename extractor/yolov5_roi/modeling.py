@@ -2,15 +2,7 @@ import torch, os
 import cv2
 import time
 
-import pathlib
-from pathlib import Path
-
-temp = pathlib.PosixPath
-pathlib.PosixPath = pathlib.Path
-
 current_dir = os.path.dirname(__file__)
-
-msiz = 500
 
 model_path = os.path.join(current_dir, "best.pt")
 
@@ -20,12 +12,38 @@ class yolov5_roi:
         self.model = torch.hub.load(
             "ultralytics/yolov5", "custom", model_path, force_reload=True
         )
+        self.msiz = 500
 
-    def get_roi(self, image):
-        pred = self.model(image, size=msiz)
+    def get_roi(self, cv2_image):
+        pred = self.model(cv2_image, size=self.msiz)
         pred = pred.xywhn[0]
-        result = pred.cpu().numpy()
-        return result
+        results = pred.cpu().numpy()
+
+        height, width, _ = cv2_image.shape
+
+        cv2_image_copy = cv2_image.copy()
+
+        for result in results:
+            min_x, min_y, w, h, conf, label = result
+
+            # Convert normalized coordinates to absolute pixel values
+            x1 = int((min_x - w / 2) * width)
+            y1 = int((min_y - h / 2) * height)
+            x2 = int((min_x + w / 2) * width)
+            y2 = int((min_y + h / 2) * height)
+
+            # Draw the bounding box
+            cv2.rectangle(cv2_image_copy, (x1, y1), (x2, y2), (255, 0, 0), 2)
+            # Optionally, add the confidence score and label
+            label_text = f'{int(label)}: {conf:.2f}'
+            cv2.putText(cv2_image_copy, label_text, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
+
+        output_path = os.path.join(current_dir, "roi_output.jpg")
+
+        # Save the image with bounding boxes
+        cv2.imwrite(output_path, cv2_image_copy)
+
+        return results
 
 
 if __name__ == "__main__":

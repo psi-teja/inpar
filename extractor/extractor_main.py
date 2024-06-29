@@ -4,9 +4,9 @@ import sys, os
 
 current_dir = os.path.dirname(__file__)
 sys.path.append(os.path.join(current_dir, "layoutLMv3"))
-from layoutLMv3.modeling import layoutLMv3
+from layoutLMv3.inference import layoutLMv3
 import traceback
-
+import copy
 
 import os, cv2, json
 from PIL import Image
@@ -17,7 +17,6 @@ from extractor_utils import (
 )
 import time
 
-
 field_values_extractor = layoutLMv3()
 roi_extractor = yolov5_roi()
 table_structure_extractor = yolov5_table()
@@ -25,7 +24,9 @@ table_structure_extractor = yolov5_table()
 os.environ["AWS_PROFILE"] = "Developers_custom1_tallydev-AI-381491826341"
 
 
-def parse_invoice(pil_image, cv2_image):
+def parse_invoice(pil_image, cv2_image, pageNo):
+
+    # print(f"Processing Page No: {pageNo}")
 
     try:
         tally_ai_json_path = os.path.join(current_dir, "tally_ai.json")
@@ -33,13 +34,9 @@ def parse_invoice(pil_image, cv2_image):
             tally_ai_json = json.load(f)
 
         roi_result = roi_extractor.get_roi(cv2_image)
-        table_ltwh = get_table_roi(roi_result, label=3)
-        amount_details_ltwh = get_table_roi(roi_result, label=5)
+        table_XcYcWH = get_table_roi(roi_result, label=3)
         table_row_wrt_page = table_structure_extractor.get_table_structure(
-            cv2_image, table_ltwh
-        )
-        amount_details_row_wrt_page = table_structure_extractor.get_table_structure(
-            cv2_image, amount_details_ltwh
+            cv2_image, table_XcYcWH
         )
 
         (
@@ -56,7 +53,8 @@ def parse_invoice(pil_image, cv2_image):
             labels_for_unique_bboxes,
             conf_arr_of_unique_bboxes,
             table_row_wrt_page,
-            amount_details_row_wrt_page,
+            {},
+            pageNo
         )
 
         cherry_picking(tally_ai_json)
@@ -68,17 +66,30 @@ def parse_invoice(pil_image, cv2_image):
     except Exception as e:
         traceback.print_exc()
         print(e)
-        return None
+        return {}
 
+
+def merge_with_final_output(tally_ai_json_page, tally_ai_json):
+    if not tally_ai_json:
+        tally_ai_json = copy.deepcopy(tally_ai_json_page)
+        return tally_ai_json
+
+    if "Table" in tally_ai_json_page and "Table" in tally_ai_json:
+        tally_ai_json['Table'].extend(tally_ai_json_page['Table'])
+    elif "Table" in tally_ai_json_page:
+        tally_ai_json['Table'] = tally_ai_json_page['Table']
+    
+    return tally_ai_json
 
 if __name__ == "__main__":
-    filename = os.path.join(
+    file_path = os.path.join(
         current_dir, "sample.jpg"
     )
     start_time = time.time()
-    pil_image = Image.open(filename)
-    cv2_image = cv2.imread(filename)
-    tally_ai_json = parse_invoice(pil_image, cv2_image)
+    pil_image = Image.open(file_path)
+    cv2_image = cv2.imread(file_path)
+    tally_ai_json = parse_invoice(pil_image, cv2_image, pageNo=1)
     print(tally_ai_json)
     end_time = time.time()
+    # print("output:", tally_ai_json)
     print("Time to run inference code:", end_time - start_time)

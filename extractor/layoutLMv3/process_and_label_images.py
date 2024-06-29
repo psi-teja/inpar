@@ -10,9 +10,6 @@ from layoutLMv3_utils import (
 from PIL import Image, ImageDraw, ImageFont
 from tqdm import tqdm
 
-# Set environment variable for AWS profile
-os.environ['AWS_PROFILE'] = "Developers_custom1_tallydev-AI-381491826341"
-
 current_dir = os.path.dirname(__file__)
 datasetFolder = os.path.join(current_dir, "datasets", "imerit")
 

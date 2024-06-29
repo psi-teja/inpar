@@ -22,7 +22,7 @@ const PdfTools: React.FC<PdfToolsProps> = ({
   docType,
 }) => {
   return (
-    <div className="p-1 flex justify-between text-xs bg-slate-300">
+    <div className="p-1 flex justify-between text-xs bg-slate-200">
       <input
         className="sm:w-20 md:w-30 lg:w-40 xl:w-50"
         id="scaleSlider"

@@ -4,13 +4,19 @@ import threading
 import os
 import cv2
 import json
+from io import BytesIO
 from PIL import Image
-from extractor_main import parse_invoice
+from extractor_main import parse_invoice, merge_with_final_output
 import logging
 import requests
+import fitz  # PyMuPDF
 import numpy as np
 import traceback
 from pdf2image import convert_from_path
+import warnings
+
+# Suppress all warnings
+warnings.filterwarnings("ignore")
 
 
 app = Flask(__name__)
@@ -23,8 +29,6 @@ channel = 'upload_doc'
 os.environ['AWS_PROFILE'] = "Developers_custom1_tallydev-AI-381491826341"
 
 # Define folder paths
-input_docs_folder = "AIBackend/DocAI/inpar-research/django_backend/input_docs"
-output_jsons_folder = "AIBackend/DocAI/inpar-research/django_backend/output_jsons"
 save_data_url = "http://localhost:8000/db_connect/upload/json"  # Replace with your actual URL
 
 # Configure logging
@@ -36,38 +40,47 @@ def redis_listener():
     pubsub.subscribe(channel)
     for message in pubsub.listen():
         if message['type'] == 'message':
-            filename = message['data'].decode('utf-8')
-            file_path = os.path.join(input_docs_folder, filename)
-            logger.info(f"Received filename: {filename}")
+            data = message['data'].decode('utf-8')
+            request_data = json.loads(data)
+            doc_id = request_data['doc_id']
+            file_path = request_data['file_path']
+            logger.info(f"Received doc_id: {doc_id}")
+
+            tally_ai_json = {}
 
             try:
                 # Determine file type
-                file_ext = os.path.splitext(filename)[1].lower()
+                file_ext = os.path.splitext(file_path)[1].lower()
 
                 if file_ext == '.pdf':
                     # Process PDF, extract the first page
                     images = convert_from_path(file_path)
 
-                    pil_image = images[0]
+                    for i in range(len(images)):
 
-                    # Convert PIL image to OpenCV image (numpy array)
-                    cv2_image = cv2.cvtColor(np.array(pil_image), cv2.COLOR_RGB2BGR)
+                        pil_image = images[i]
+
+                        # Convert PIL image to OpenCV image (numpy array)
+                        cv2_image = cv2.cvtColor(np.array(pil_image), cv2.COLOR_RGB2BGR)
+
+
+                        tally_ai_json_page = parse_invoice(pil_image, cv2_image, pageNo = i+1)
+
+                        
+                        tally_ai_json = merge_with_final_output(tally_ai_json_page, tally_ai_json)
 
                 else:
                     # Process image
                     pil_image = Image.open(file_path)
                     cv2_image = cv2.imread(file_path)
 
+                    tally_ai_json = parse_invoice(pil_image, cv2_image, pageNo=1)
+
                 if pil_image is None or cv2_image is None:
                     logger.error(f"Error opening file: {file_path}")
                     continue
+                
 
-                # Parse the invoice
-                tally_ai_json = parse_invoice(pil_image, cv2_image)
-
-
-                # Send JSON data to save_data endpoint
-                doc_id = os.path.splitext(filename)[0]
                 
                 headers = {'Content-Type': 'application/json'}
                 response = requests.post(
@@ -83,7 +96,7 @@ def redis_listener():
 
             except Exception as e:
                 traceback.print_exc()
-                logger.error(f"Error processing file {filename}: {str(e)}")
+                logger.error(f"Error processing file {doc_id}: {str(e)}")
 
 @app.route('/')
 def home():

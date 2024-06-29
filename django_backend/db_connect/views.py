@@ -113,8 +113,13 @@ def upload_doc(request):
             local_file=uploaded_file.name,
             status="inqueue"
         )
+        # Create the request dictionary
+        request_dict = {"doc_id": doc_id, "file_path": file_path}
 
-        redis_client.publish(channel, filename)
+        # Convert the dictionary to a JSON string
+        request_json = json.dumps(request_dict)
+
+        redis_client.publish(channel, request_json)
 
         return JsonResponse({'status': 'success', 'file_path': file_path})
     else:

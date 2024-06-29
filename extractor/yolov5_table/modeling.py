@@ -5,9 +5,8 @@ import numpy as np
 from PIL import Image
 
 current_dir = os.path.dirname(__file__)
-msiz = 500
-model_path = os.path.join(current_dir, "yolov5_table.pt")
-
+# model_path = os.path.join(current_dir, "yolov5_table.pt")
+model_path = os.path.join(current_dir, "results", "runs", "exp6", "weights", "best.pt")
 
 class yolov5_table:
     def __init__(self):
@@ -15,21 +14,25 @@ class yolov5_table:
             "ultralytics/yolov5", "custom", model_path, force_reload=True
         )
 
-    def get_table_structure(self, cv2_image, table_ltwh):
-        if not list(table_ltwh): return []
-        l, t, w, h = table_ltwh
+        self.msiz = 500
+
+    def get_table_structure(self, cv2_image, table_XcYcWH):
+        if not list(table_XcYcWH): return []
+        Xc, Yc, W, H = table_XcYcWH
         height, width, _ = cv2_image.shape
 
-        x1 = max(0, int((l - w / 2 - 0.001) * width))
-        y1 = max(0, int((t - h / 2 - 0.001) * height))
-        x2 = min(width, int((l + w / 2 + 0.001) * width))
-        y2 = min(height, int((t + h / 2 + 0.001) * height))
+        cv2_image_copy = cv2_image.copy()
+
+        x1 = max(0, int((Xc - W / 2 - 0.001) * width))
+        y1 = max(0, int((Yc - H / 2 - 0.001) * height))
+        x2 = min(width, int((Xc + W / 2 + 0.001) * width))
+        y2 = min(height, int((Yc + H / 2 + 0.001) * height))
 
         table_cv2_image = cv2_image[y1:y2, x1:x2, :]
 
         # rotated_image, angle = self.correct_tilt(table_cv2_image)
 
-        pred = self.model(table_cv2_image, size=msiz)
+        pred = self.model(table_cv2_image, size=self.msiz)
 
         # pred = self.rotate_predictions(pred, angle, rotated_image.shape)
 
@@ -45,21 +48,31 @@ class yolov5_table:
         for result in results:
             min_x = result[0]
             min_y = result[1]
-            w = result[2]
-            h = result[3]
+            W = result[2]
+            H = result[3]
 
-            x1 = ((min_x - w / 2) * w_t + xoff) / width
-            y1 = ((min_y - h / 2) * h_t + yoff) / height
-            x2 = ((min_x + w / 2) * w_t + xoff) / width
-            y2 = ((min_y + h / 2) * h_t + yoff) / height
+            x1 = ((min_x - W / 2) * w_t + xoff) / width
+            y1 = ((min_y - H / 2) * h_t + yoff) / height
+            x2 = ((min_x + W / 2) * w_t + xoff) / width
+            y2 = ((min_y + H / 2) * h_t + yoff) / height
 
             label = result[-1]
             conf = result[-2]
 
             if label == 1:
                 output["column_boxes"].append({"bbox": [x1, y1, x2, y2], "score": conf})
-            elif label == 2:
+            elif label == 0:
                 output["row_boxes"].append({"bbox": [x1, y1, x2, y2], "score": conf})
+
+            x1 *= width
+            y1 *= height
+            x2 *= width
+            y2 *= height
+
+            if conf>0.5:
+                cv2.rectangle(cv2_image_copy, (int(x1), int(y1)), (int(x2), int(y2)), (0, 0, 255), 2)
+                output_image_path = os.path.join(current_dir, "row_col_output.jpg")
+                cv2.imwrite(output_image_path, cv2_image_copy)
 
         return output["row_boxes"]
 

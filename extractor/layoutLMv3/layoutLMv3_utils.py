@@ -67,7 +67,6 @@ class ProcessorWithAWSOCR:
 
 
 
-
 class colors:
     PURPLE = '\033[95m'
     CYAN = '\033[96m'
@@ -291,6 +290,48 @@ def fraction_to_ratio(numerator, denominator):
     
     # Return the simplified ratio as a string
     return f"{simplified_numerator}:{simplified_denominator}"
+
+def get_avg_conf(conf_arr):
+    # Create a dictionary to hold the sum of confidences and the count for each label
+    label_confidence = {}
+
+    for label, confidence in conf_arr:
+        if label in label_confidence:
+            label_confidence[label]["sum"] += confidence
+            label_confidence[label]["count"] += 1
+        else:
+            label_confidence[label] = {"sum": confidence, "count": 1}
+
+    # Calculate the average confidence for each label
+    average_confidence = {
+        label: values["sum"] / values["count"]
+        for label, values in label_confidence.items()
+    }
+    return average_confidence
+
+def get_label_from_sum_conf(conf_arr):
+    # Create a dictionary to hold the sum of confidences and the count for each label
+    label_confidence = {}
+
+    for label, confidence in conf_arr:
+        if label in label_confidence:
+            label_confidence[label]["conf_sum"] += confidence
+            label_confidence[label]["count"] += 1
+        else:
+            label_confidence[label] = {"conf_sum": confidence, "count": 1}
+
+    max_conf = 0
+
+    return_label = None
+
+    for field in label_confidence:
+        item = label_confidence[field]
+        conf = item['conf_sum']
+        if max_conf < conf:
+            max_conf = conf
+            return_label = field
+
+    return return_label
 
 
 if __name__ == "__main__":

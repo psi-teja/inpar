@@ -7,7 +7,7 @@ current_dir = os.path.dirname(__file__)
 
 def get_table_roi(roi_result, label):
     max_conf = 0
-    table_ltwh = []
+    table_XcYcWH = []
     for result in roi_result:
         if int(result[-1]) == label:
 
@@ -15,8 +15,8 @@ def get_table_roi(roi_result, label):
 
             if conf > max_conf:
                 max_conf = conf
-                table_ltwh = result[:4]
-    return table_ltwh
+                table_XcYcWH = result[:4]
+    return table_XcYcWH
 
 
 def draw_roi_results_image(roi_result, cv2_image):
@@ -703,7 +703,7 @@ def find_items_table_row(table_row_wrt_page, word_yc):
         if word_yc > y1 and word_yc < y2:
             return i - 1
 
-    return -1
+    return None
 
 
 def get_avg_conf(conf_arr):
@@ -762,6 +762,7 @@ def cherry_picking(tally_ai_json):
     return tally_ai_json
 
 
+
 def filling_tally_ai_json(
     tally_ai_json,
     unique_bboxes_xyxy,
@@ -770,6 +771,7 @@ def filling_tally_ai_json(
     conf_arr_of_unique_bboxes,
     table_row_wrt_page,
     amount_details_row_wrt_page,
+    pageNo
 ):
 
     if table_row_wrt_page:
@@ -804,12 +806,16 @@ def filling_tally_ai_json(
         if label == "Other":
             continue
 
-        if label.find("GSTIN") != -1 and words.find("GSTIN") != -1:
-            continue
+        if label.find("GSTIN") != -1:
+            if words.find("GSTIN") != -1:
+                continue
+            # if words.find(':') != -1:
+            #     continue
 
         if label.find("Table") != -1:
             if not table_row_wrt_page: continue
             row_index = find_items_table_row(table_row_wrt_page, word_yc)
+            if not row_index: continue
             col_name = label[5:]
             extractedValue = tally_ai_json["Table"][row_index][col_name]
 
@@ -817,7 +823,7 @@ def filling_tally_ai_json(
                 tally_ai_json["Table"][row_index][col_name] = {
                     "text": words,
                     "location": {
-                        "pageNo": 1,
+                        "pageNo": pageNo,
                         "ltwh": ltwh1,
                     },
                 }
@@ -828,7 +834,7 @@ def filling_tally_ai_json(
                 tally_ai_json["Table"][row_index][col_name] = {
                     "text": new_text,
                     "location": {
-                        "pageNo": 1,
+                        "pageNo": pageNo,
                         "ltwh": new_ltwh,
                     },
                 }
@@ -838,7 +844,7 @@ def filling_tally_ai_json(
             tally_ai_json["LedgerDetails"][0][col_name] = {
                 "text": words,
                 "location": {
-                    "pageNo": 1,
+                    "pageNo": pageNo,
                     "ltwh": ltwh1,
                 },
             }
@@ -849,7 +855,7 @@ def filling_tally_ai_json(
                     tally_ai_json[label] = {
                         "text": words,
                         "location": {
-                            "pageNo": 1,
+                            "pageNo": pageNo,
                             "ltwh": ltwh1
                         },
                         "conf_arr": conf_arr
@@ -863,7 +869,7 @@ def filling_tally_ai_json(
                         new_ltwh = min_super_rectangle(old_ltwh, ltwh1)
                         tally_ai_json[label] = {
                             "text": new_text,
-                            "location": {"pageNo": 1, "ltwh": new_ltwh},
+                            "location": {"pageNo": pageNo, "ltwh": new_ltwh},
                             "conf_arr": old_conf_arr+conf_arr
                         }
                     else:
@@ -871,8 +877,8 @@ def filling_tally_ai_json(
                         tally_ai_json[label].append(
                             {
                                 "text": words,
-                                "location": {"pageNo": 1, "ltwh": ltwh1},
-                                "conf_arr": old_conf_arr+conf_arr
+                                "location": {"pageNo": pageNo, "ltwh": ltwh1},
+                                "conf_arr": conf_arr
                             }
                         )
 
@@ -895,20 +901,19 @@ def filling_tally_ai_json(
                     new_ltwh = min_super_rectangle(old_ltwh,ltwh1)
                     tally_ai_json[label][group_index] = {
                         "text": new_text,
-                        "location": {"pageNo": 1, "ltwh": new_ltwh},
+                        "location": {"pageNo": pageNo, "ltwh": new_ltwh},
                         'conf_arr': old_conf_arr+conf_arr
                     }
                 else:
                     tally_ai_json[label].append(
                             {
                                 "text": words,
-                                "location": {"pageNo": 1, "ltwh": ltwh1},
+                                "location": {"pageNo": pageNo, "ltwh": ltwh1},
                                 'conf_arr': conf_arr
                             }
                         )
 
-    with open(os.path.join(current_dir, "output_pre_label.json"), "w") as json_file:
-        json.dump(tally_ai_json, json_file)
+    
 
     return tally_ai_json
 
