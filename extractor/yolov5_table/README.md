@@ -58,7 +58,9 @@ python -m torch.distributed.run --nproc_per_node 8 yolov5/train.py --batch 64 --
 ```bash
 # DP training on 1 NVIDIA T1000 GPU machine
 python yolov5/train.py --img 640 --batch 16 --epochs 50 --data datasets/imerit/row_col.yml --weights yolov5s.pt --project results/runs --device 0
+# Run the training script with nohup
+nohup python yolov5/train.py --img 640 --batch 16 --epochs 50 --data datasets/imerit/row_col.yml --weights yolov5s.pt --project results/runs --device 0 > temp_train_output.log 2>&1 &
+
 ```
 
-
-Training results are stored in `results/runs/exp{i}`, where i is a sequential number starting from 1.
+Training results are stored in `results/runs/exp{i}`, where i is a dynamically generated sequential number

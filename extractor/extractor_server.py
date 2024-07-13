@@ -25,8 +25,6 @@ app = Flask(__name__)
 redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
 channel = 'upload_doc'
 
-# Set environment variable for AWS profile
-os.environ['AWS_PROFILE'] = "Developers_custom1_tallydev-AI-381491826341"
 
 # Define folder paths
 save_data_url = "http://localhost:8000/db_connect/upload/json"  # Replace with your actual URL

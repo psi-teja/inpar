@@ -22,7 +22,7 @@ const PdfTools: React.FC<PdfToolsProps> = ({
   docType,
 }) => {
   return (
-    <div className="p-1 flex justify-between text-xs bg-slate-200">
+    <div className="p-1 flex justify-between text-xs bg-slate-300">
       <input
         className="sm:w-20 md:w-30 lg:w-40 xl:w-50"
         id="scaleSlider"
@@ -48,7 +48,7 @@ const PdfTools: React.FC<PdfToolsProps> = ({
         onClick={() => downloadFile(file, docType)}
       >
         <svg
-          className="h-5 w-5 text-black"
+          className="h-5 w-5 text-black "
           width="24"
           height="24"
           viewBox="0 0 24 24"

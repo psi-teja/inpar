@@ -5,17 +5,22 @@ from PyPDF2 import PdfReader
 from pdf2image import convert_from_path
 import json
 from tqdm import tqdm
+from layoutLMv3_utils import convert_labels, ledger_fields_list
 
 current_dir = os.path.dirname(__file__)
 
 # Define your dataset and folder paths
 dataset_folder = os.path.join(current_dir, "datasets", "imerit")
 
-doc_folder = os.path.join(dataset_folder, "docs")
-individualfield_json_folder = os.path.join(dataset_folder, "individualfield_jsons")
+phase = "phase1"
 
-images_folder = os.path.join(dataset_folder, "images")
-labels_folder = os.path.join(dataset_folder, "tally_ai_jsons")
+phase_folder = os.path.join(dataset_folder, phase)
+
+doc_folder = os.path.join(phase_folder, "docs")
+individualfield_json_folder = os.path.join(phase_folder, "individualfield_jsons")
+
+images_folder = os.path.join(phase_folder, "images")
+labels_folder = os.path.join(phase_folder, "tally_ai_jsons")
 
 # Create directories if they don't exist
 os.makedirs(images_folder, exist_ok=True)
@@ -58,6 +63,9 @@ for i in tqdm(range(len(doc_list)), unit="sample"):
                     missing_jsons.append(f"{doc_name.split('.')[0]}_page{page_num+1}")
                     continue
 
+                individualfield_data_page = convert_labels(individualfield_data_page)
+
+
                 with open(json_path, "w") as f:
                     json.dump(individualfield_data_page, f)
 
@@ -80,6 +88,7 @@ for i in tqdm(range(len(doc_list)), unit="sample"):
             continue
         
         individualfield_data_page = individualfield_data[0]
+        individualfield_data_page = convert_labels(individualfield_data_page)
         with open(json_path, "w") as f:
             json.dump(individualfield_data_page, f)
         num_of_samples += 1

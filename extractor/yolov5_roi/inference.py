@@ -1,11 +1,17 @@
-import torch, os
+import torch
+import os
 import cv2
 import time
+from yolov5_roi_utils import download_model_from_s3
 
 current_dir = os.path.dirname(__file__)
+job_dir = os.path.join(current_dir, "results","runs","20240618233421")
 
-model_path = os.path.join(current_dir, "best.pt")
+if not os.path.exists(job_dir):
+    if not download_model_from_s3(job_dir):
+        raise RuntimeError("Failed to download model from S3. Exiting script.")
 
+model_path = os.path.join(job_dir, "weights", "best.pt")
 
 class yolov5_roi:
     def __init__(self) -> None:
@@ -20,11 +26,12 @@ class yolov5_roi:
         results = pred.cpu().numpy()
 
         height, width, _ = cv2_image.shape
-
         cv2_image_copy = cv2_image.copy()
 
+        updated_results = []
+
         for result in results:
-            min_x, min_y, w, h, conf, label = result
+            min_x, min_y, w, h, conf, class_id = result
 
             # Convert normalized coordinates to absolute pixel values
             x1 = int((min_x - w / 2) * width)
@@ -32,19 +39,28 @@ class yolov5_roi:
             x2 = int((min_x + w / 2) * width)
             y2 = int((min_y + h / 2) * height)
 
-            # Draw the bounding box
-            cv2.rectangle(cv2_image_copy, (x1, y1), (x2, y2), (255, 0, 0), 2)
+            
+
+            # Get class name from class_id
+            class_name = self.model.names[int(class_id)]
+
+            # Replace class_id with class_name in the result
+            updated_results.append([min_x, min_y, w, h, conf, class_name])
+
             # Optionally, add the confidence score and label
-            label_text = f'{int(label)}: {conf:.2f}'
-            cv2.putText(cv2_image_copy, label_text, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 0.5, (255, 0, 0), 1)
+            label_text = f'{class_name}: {conf:.2f}'
+
+            # Draw the bounding box
+            if float(conf) > 0.8:
+                cv2.rectangle(cv2_image_copy, (x1, y1), (x2, y2), (255, 0, 0), thickness=2)
+                cv2.putText(cv2_image_copy, label_text, (x1, y1 - 10), cv2.FONT_HERSHEY_SIMPLEX, 1, (0, 0, 255), thickness=3)
 
         output_path = os.path.join(current_dir, "roi_output.jpg")
 
         # Save the image with bounding boxes
         cv2.imwrite(output_path, cv2_image_copy)
 
-        return results
-
+        return updated_results
 
 if __name__ == "__main__":
     filename = os.path.join(current_dir, "sample.jpg")

@@ -28,7 +28,7 @@ def split_data(dataset_folder, train_ratio, val_ratio, test_ratio):
     print(f"NumberOfSamples: {num_samples}")
 
     image_folder = os.path.join(dataset_folder, "images")
-    label_folder = os.path.join(dataset_folder, "label_jsons")
+    label_folder = os.path.join(dataset_folder, "label_jsons_word")
 
     # Create train, val and test folders
     train_image_folder = os.path.join(dataset_folder, "train", "images")
@@ -73,20 +73,26 @@ def split_data(dataset_folder, train_ratio, val_ratio, test_ratio):
 
     # Move train images and labels to train folders
     for image in train_images:
+        label = image.replace(".jpeg", ".json")
+        if label not in label_files:
+            continue
         shutil.copy(os.path.join(image_folder, image), os.path.join(train_image_folder, image))
-        label = image.replace(".jpeg", ".json")  # Assuming labels have the same name as images with a different extension
         shutil.copy(os.path.join(label_folder, label), os.path.join(train_label_folder, label))
 
     # Move val images and labels to val folders
     for image in val_images:
-        shutil.copy(os.path.join(image_folder, image), os.path.join(val_image_folder, image))
         label = image.replace(".jpeg", ".json")  # Assuming labels have the same name as images with a different extension
+        if label not in label_files:
+            continue
+        shutil.copy(os.path.join(image_folder, image), os.path.join(val_image_folder, image))
         shutil.copy(os.path.join(label_folder, label), os.path.join(val_label_folder, label))
 
     # Move test images and labels to test folders
     for image in test_images:
-        shutil.copy(os.path.join(image_folder, image), os.path.join(test_image_folder, image))
         label = image.replace(".jpeg", ".json")  # Assuming labels have the same name as images with a different extension
+        if label not in label_files:
+            continue
+        shutil.copy(os.path.join(image_folder, image), os.path.join(test_image_folder, image))
         shutil.copy(os.path.join(label_folder, label), os.path.join(test_label_folder, label))
 
     with open(os.path.join(dataset_folder, "details.cfg"), "w") as configfile:
@@ -95,6 +101,6 @@ def split_data(dataset_folder, train_ratio, val_ratio, test_ratio):
 
 if __name__ == "__main__":
 
-    dataset_folder = os.path.join(current_dir, "datasets", "imerit")
+    dataset_folder = os.path.join(current_dir, "datasets", "imerit", "phase1")
 
     split_data(dataset_folder, train_ratio=0.7, val_ratio=0.15, test_ratio=0.15)

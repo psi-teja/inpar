@@ -27,6 +27,7 @@ interface PdfViewerProps {
   ) => void;
   selectedField: string | null;
   selectedRow: number | null;
+  colName: string | null;
   dataChanged: boolean;
 }
 
@@ -38,6 +39,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({
   handleSingleValuedFieldChange,
   handleNestedFieldChange,
   selectedField,
+  colName,
   selectedRow,
 }) => {
   const [numPages, setNumPages] = useState<number>();
@@ -77,7 +79,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({
         inline: "center",
       });
     }
-    if (boxLocation){
+    if (boxLocation) {
       setPageNumber(boxLocation.pageNo)
     }
   }, [boxLocation]);
@@ -196,91 +198,91 @@ const PdfViewer: React.FC<PdfViewerProps> = ({
 
   const handleMouseUp = async () => {
     if (!boxLocation) {
-        setDrawingBox(false);
+      setDrawingBox(false);
 
-        if (viewerLoc) {
-            // Calculate the scroll offset of the page div
-            const scrollOffsetX = viewerRef.current?.scrollLeft || 0;
-            const scrollOffsetY = viewerRef.current?.scrollTop || 0;
+      if (viewerLoc) {
+        // Calculate the scroll offset of the page div
+        const scrollOffsetX = viewerRef.current?.scrollLeft || 0;
+        const scrollOffsetY = viewerRef.current?.scrollTop || 0;
 
-            // Calculate the position of the rectangle relative to the scrolled viewport
-            const left = Math.min(startX, endX) + scrollOffsetX;
-            const top = Math.min(startY, endY) + scrollOffsetY;
-            const width = Math.abs(endX - startX);
-            const height = Math.abs(endY - startY);
-            const scaledLeft = left / pdfDim.width / scale;
-            const scaledTop = top / pdfDim.height / scale;
-            const scaledWidth = width / pdfDim.width / scale;
-            const scaledHeight = height / pdfDim.height / scale;
+        // Calculate the position of the rectangle relative to the scrolled viewport
+        const left = Math.min(startX, endX) + scrollOffsetX;
+        const top = Math.min(startY, endY) + scrollOffsetY;
+        const width = Math.abs(endX - startX);
+        const height = Math.abs(endY - startY);
+        const scaledLeft = left / pdfDim.width / scale;
+        const scaledTop = top / pdfDim.height / scale;
+        const scaledWidth = width / pdfDim.width / scale;
+        const scaledHeight = height / pdfDim.height / scale;
 
-            if (viewType === "DocInfo") {
-                handleSingleValuedFieldChange(
-                    selectedField,
-                    null,
-                    {
-                        pageNo: pageNumber,
-                        ltwh: [scaledLeft, scaledTop, scaledWidth, scaledHeight],
-                    },
-                    "add bbox"
-                );
-            } else {
-                handleNestedFieldChange(
-                    "Table",
-                    selectedRow,
-                    selectedField,
-                    null,
-                    {
-                        pageNo: pageNumber,
-                        ltwh: [scaledLeft, scaledTop, scaledWidth, scaledHeight],
-                    },
-                    "add bbox"
-                );
-            }
-
-            // Crop the selected area as an image
-            const canvas = document.createElement("canvas");
-            const context = canvas.getContext("2d");
-            canvas.width = width;
-            canvas.height = height;
-            context?.drawImage(
-                document.getElementsByTagName("canvas")[0],
-                left,
-                top,
-                width,
-                height,
-                0,
-                0,
-                width,
-                height
-            );
-            const imageDataUrl = canvas.toDataURL();
-            // console.log(left, top)
-            // console.log(document.getElementsByTagName("canvas")[0])
-            // console.log(imageDataUrl)
-
-            // Convert the data URL to a blob
-            const blob = await fetch(imageDataUrl).then((res) => res.blob());
-
-            // Send the image to the OCR endpoint
-            const formData = new FormData();
-            formData.append("file", blob, "cropped_image.png");
-
-            try {
-                const response = await fetch("http://localhost:8000/ocr/", {
-                    method: "POST",
-                    body: formData,
-                });
-                const data = await response.json();
-                console.log("OCR Result:", data.text);
-            } catch (error) {
-                console.error("Error during OCR:", error);
-            }
+        if (selectedField != "Table" && selectedField != "LedgerDetails") {
+          handleSingleValuedFieldChange(
+            selectedField,
+            null,
+            {
+              pageNo: pageNumber,
+              ltwh: [scaledLeft, scaledTop, scaledWidth, scaledHeight],
+            },
+            "add bbox"
+          );
+        } else {
+          handleNestedFieldChange(
+            selectedField,
+            selectedRow,
+            colName,
+            null,
+            {
+              pageNo: pageNumber,
+              ltwh: [scaledLeft, scaledTop, scaledWidth, scaledHeight],
+            },
+            "add bbox"
+          );
         }
 
-        setStartX(0);
-        setStartY(0);
+        // Crop the selected area as an image
+        const canvas = document.createElement("canvas");
+        const context = canvas.getContext("2d");
+        canvas.width = width;
+        canvas.height = height;
+        context?.drawImage(
+          document.getElementsByTagName("canvas")[0],
+          left,
+          top,
+          width,
+          height,
+          0,
+          0,
+          width,
+          height
+        );
+        const imageDataUrl = canvas.toDataURL();
+        console.log(left, top)
+        console.log(document.getElementsByTagName("canvas")[0])
+        console.log(imageDataUrl)
+
+        // Convert the data URL to a blob
+        const blob = await fetch(imageDataUrl).then((res) => res.blob());
+
+        // Send the image to the OCR endpoint
+        const formData = new FormData();
+            formData.append("file", blob, "cropped_image.png");
+
+        try {
+          const response = await fetch("http://localhost:8000/db_connect/get/ocr_text/", {
+            method: "POST",
+            body: formData,
+          });
+          const data = await response.json();
+          console.log("OCR Result:", data.text);
+        } catch (error) {
+          console.error("Error during OCR:", error);
+        }
+      }
+
+      setStartX(0);
+      setStartY(0);
     }
-};
+  };
 
 
   return (
@@ -297,7 +299,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({
       />
       <div
         className={`${
-          viewType === "DocInfo" ? "w-[70vw] h-[87.5vh]" : "h-[50vh]"
+          viewType === "General" ? "w-[70vw] h-[87.5vh]" : "h-[50vh]"
         } overflow-auto scroll-smooth ${(!boxLocation && selectedField)? "cursor-crosshair":""}`}
         onMouseDown={handleMouseDown}
         onMouseMove={handleMouseMove}

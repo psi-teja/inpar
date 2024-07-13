@@ -3,13 +3,16 @@ from collections import Counter
 import copy
 from fitz import Rect
 import cv2, os, json
+from fuzzywuzzy import fuzz
+
 current_dir = os.path.dirname(__file__)
 
-def get_table_roi(roi_result, label):
+
+def get_table_roi(roi_result, label_name):
     max_conf = 0
     table_XcYcWH = []
     for result in roi_result:
-        if int(result[-1]) == label:
+        if result[-1] == label_name:
 
             conf = result[-2]
 
@@ -95,21 +98,27 @@ def iob(bbox1, bbox2):
     return 0
 
 
-def calculate_ioa(bbox1, bbox2):
-    x_left = max(bbox1[0], bbox2[0])
-    y_top = max(bbox1[1], bbox2[1])
-    x_right = min(bbox1[2], bbox2[2])
-    y_bottom = min(bbox1[3], bbox2[3])
+def calculate_ioa(l1, t1, w1, h1, l2, t2, w2, h2):
+    # Calculate coordinates of intersection rectangle
+    x_left = max(l1, l2)
+    y_top = max(t1, t2)
+    x_right = min(l1 + w1, l2 + w2)
+    y_bottom = min(t1 + h1, t2 + h2)
+
     # Check if there's no intersection (one or both rectangles have zero area)
     if x_right < x_left or y_bottom < y_top:
         return 0.0
+
     # Calculate intersection area
     intersection_area = (x_right - x_left) * (y_bottom - y_top)
+
     # Calculate area of each rectangle
-    area1 = (bbox1[2] - bbox1[0]) * (bbox1[3] - bbox1[1])
-    area2 = (bbox2[2] - bbox2[0]) * (bbox2[3] - bbox2[1])
+    area1 = w1 * h1
+    area2 = w2 * h2
+
     if not area1 or not area2:
         return 0
+
     if area1 < area2:
         ioa = intersection_area / area1
     else:
@@ -695,18 +704,31 @@ def min_super_rectangle(ltwh1, ltwh2):
     return [l, t, w, h]
 
 
-def find_items_table_row(table_row_wrt_page, word_yc):
+def find_items_table_row(table_row_wrt_page, ltwh1):
+
+    l1, t1, w1, h1 = ltwh1
+
+    max_ioa = 0
+    best_row = None
 
     for i in range(len(table_row_wrt_page)):
         x1, y1, x2, y2 = table_row_wrt_page[i]["bbox"]
 
-        if word_yc > y1 and word_yc < y2:
-            return i - 1
+        l2 = x1
+        t2 = y1
+        w2 = x2 - x1
+        h2 = y2 - y1
 
-    return None
+        ioa = calculate_ioa(l1, t1, w1, h1, l2, t2, w2, h2)
+
+        if max_ioa < ioa:
+            max_ioa = ioa
+            best_row = i
+
+    return best_row
 
 
-def get_avg_conf(conf_arr):
+def get_sum_conf(conf_arr):
     # Create a dictionary to hold the sum of confidences and the count for each label
     label_confidence = {}
 
@@ -718,11 +740,10 @@ def get_avg_conf(conf_arr):
             label_confidence[label] = {"sum": confidence, "count": 1}
 
     # Calculate the average confidence for each label
-    average_confidence = {
-        label: values["sum"] / values["count"]
-        for label, values in label_confidence.items()
+    sum_confidence = {
+        label: values["sum"] for label, values in label_confidence.items()
     }
-    return average_confidence
+    return sum_confidence
 
 
 def get_shortest_dist_btw_rect(ltwh1, ltwh2):
@@ -743,24 +764,24 @@ def get_shortest_dist_btw_rect(ltwh1, ltwh2):
 
     return distance
 
+
 def cherry_picking(tally_ai_json):
     for field in tally_ai_json:
-        if field.find("Table") == -1 and field.find("LedgerDetails")==-1:
+        if field.find("Table") == -1 and field.find("LedgerDetails") == -1:
             if isinstance(tally_ai_json[field], list):
                 best_extractedValue = None
                 best_conf = 0
                 for i in range(len(tally_ai_json[field])):
                     extractedValue = tally_ai_json[field][i]
-                    conf_arr = extractedValue['conf_arr']
-                    conf = get_avg_conf(conf_arr)[field]
+                    conf_arr = extractedValue["conf_arr"]
+                    conf = get_sum_conf(conf_arr)[field]
                     if conf > best_conf:
                         best_conf = conf
                         best_extractedValue = extractedValue
-            
+
                 tally_ai_json[field] = best_extractedValue
 
     return tally_ai_json
-
 
 
 def filling_tally_ai_json(
@@ -769,19 +790,9 @@ def filling_tally_ai_json(
     words_in_unique_bboxes,
     labels_for_unique_bboxes,
     conf_arr_of_unique_bboxes,
-    table_row_wrt_page,
     amount_details_row_wrt_page,
-    pageNo
+    pageNo,
 ):
-
-    if table_row_wrt_page:
-        table_row_wrt_page = sorted(table_row_wrt_page, key=lambda item: item["bbox"][1])
-
-    num_of_rows = len(table_row_wrt_page) - 1
-
-    row_template = tally_ai_json["Table"][0]
-
-    tally_ai_json["Table"] = [dict(row_template) for _ in range(num_of_rows)]
 
     for bbox, words, label, conf_arr in zip(
         unique_bboxes_xyxy,
@@ -790,56 +801,21 @@ def filling_tally_ai_json(
         conf_arr_of_unique_bboxes,
     ):
 
-        x1, y1, x2, y2 = bbox
+        min_shortest_dist_th = 0.01
 
-        avg_conf = get_avg_conf(conf_arr)
+        x1, y1, x2, y2 = bbox
 
         l1 = x1
         t1 = y1
         w1 = x2 - x1
         h1 = y2 - y1
 
-        word_yc = (y1 + y2) / 2
-
         ltwh1 = [l1, t1, w1, h1]
 
-        if label == "Other":
+        if label[:5] in ["Other", "Table"]:
             continue
 
-        if label.find("GSTIN") != -1:
-            if words.find("GSTIN") != -1:
-                continue
-            # if words.find(':') != -1:
-            #     continue
-
-        if label.find("Table") != -1:
-            if not table_row_wrt_page: continue
-            row_index = find_items_table_row(table_row_wrt_page, word_yc)
-            if not row_index: continue
-            col_name = label[5:]
-            extractedValue = tally_ai_json["Table"][row_index][col_name]
-
-            if extractedValue["location"]["pageNo"] == 0:
-                tally_ai_json["Table"][row_index][col_name] = {
-                    "text": words,
-                    "location": {
-                        "pageNo": pageNo,
-                        "ltwh": ltwh1,
-                    },
-                }
-            else:
-                new_text = extractedValue["text"] + " " + words
-                old_ltwh = extractedValue["location"]["ltwh"]
-                new_ltwh = min_super_rectangle(old_ltwh, ltwh1)
-                tally_ai_json["Table"][row_index][col_name] = {
-                    "text": new_text,
-                    "location": {
-                        "pageNo": pageNo,
-                        "ltwh": new_ltwh,
-                    },
-                }
-
-        elif label.find("LedgerDetails") != -1:
+        if label.find("LedgerDetails") != -1:
             col_name = label[13:]
             tally_ai_json["LedgerDetails"][0][col_name] = {
                 "text": words,
@@ -854,23 +830,20 @@ def filling_tally_ai_json(
                 if extractedValue["location"]["pageNo"] == 0:
                     tally_ai_json[label] = {
                         "text": words,
-                        "location": {
-                            "pageNo": pageNo,
-                            "ltwh": ltwh1
-                        },
-                        "conf_arr": conf_arr
+                        "location": {"pageNo": pageNo, "ltwh": ltwh1},
+                        "conf_arr": conf_arr,
                     }
                 else:
                     new_text = extractedValue["text"] + " " + words
                     old_ltwh = extractedValue["location"]["ltwh"]
-                    old_conf_arr = extractedValue['conf_arr']
+                    old_conf_arr = extractedValue["conf_arr"]
                     shortest_dist = get_shortest_dist_btw_rect(ltwh1, old_ltwh)
-                    if shortest_dist < 0.025:
+                    if shortest_dist < min_shortest_dist_th:
                         new_ltwh = min_super_rectangle(old_ltwh, ltwh1)
                         tally_ai_json[label] = {
                             "text": new_text,
                             "location": {"pageNo": pageNo, "ltwh": new_ltwh},
-                            "conf_arr": old_conf_arr+conf_arr
+                            "conf_arr": old_conf_arr + conf_arr,
                         }
                     else:
                         tally_ai_json[label] = [extractedValue]
@@ -878,42 +851,40 @@ def filling_tally_ai_json(
                             {
                                 "text": words,
                                 "location": {"pageNo": pageNo, "ltwh": ltwh1},
-                                "conf_arr": conf_arr
+                                "conf_arr": conf_arr,
                             }
                         )
 
             else:
-                min_shortest_dist = float('inf')
+                min_shortest_dist = float("inf")
                 group_index = None
                 for i in range(len(tally_ai_json[label])):
                     extractedValue = tally_ai_json[label][i]
-                    old_ltwh = extractedValue['location']['ltwh']
+                    old_ltwh = extractedValue["location"]["ltwh"]
                     shortest_dist = get_shortest_dist_btw_rect(ltwh1, old_ltwh)
                     if shortest_dist < min_shortest_dist:
                         min_shortest_dist = shortest_dist
                         group_index = i
 
-                if min_shortest_dist < 0.025:
+                if min_shortest_dist < min_shortest_dist_th:
                     extractedValue = tally_ai_json[label][group_index]
                     new_text = extractedValue["text"] + " " + words
                     old_ltwh = extractedValue["location"]["ltwh"]
-                    old_conf_arr = extractedValue['conf_arr']
-                    new_ltwh = min_super_rectangle(old_ltwh,ltwh1)
+                    old_conf_arr = extractedValue["conf_arr"]
+                    new_ltwh = min_super_rectangle(old_ltwh, ltwh1)
                     tally_ai_json[label][group_index] = {
                         "text": new_text,
                         "location": {"pageNo": pageNo, "ltwh": new_ltwh},
-                        'conf_arr': old_conf_arr+conf_arr
+                        "conf_arr": old_conf_arr + conf_arr,
                     }
                 else:
                     tally_ai_json[label].append(
-                            {
-                                "text": words,
-                                "location": {"pageNo": pageNo, "ltwh": ltwh1},
-                                'conf_arr': conf_arr
-                            }
-                        )
-
-    
+                        {
+                            "text": words,
+                            "location": {"pageNo": pageNo, "ltwh": ltwh1},
+                            "conf_arr": conf_arr,
+                        }
+                    )
 
     return tally_ai_json
 

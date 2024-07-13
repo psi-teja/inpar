@@ -41,7 +41,7 @@ function Submissions() {
   if (!data) return <p>No profile data</p>;
 
   return (
-    <div className="max-w-2xl mx-auto mt-4">
+    <div className="max-w-5xl mx-auto mt-4">
       <div className="bg-slate-500 text-white rounded-md p-4">
         <div className="grid grid-cols-4 gap-3 text-xl">
           <div className="text-left">

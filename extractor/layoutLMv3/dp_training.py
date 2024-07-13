@@ -15,7 +15,14 @@ from layoutLMv3_utils import (
     CustomDataset_DP,
     colors,
     device,
+    upload_file_to_s3
 )
+
+
+import warnings
+
+# Suppress all warnings
+warnings.filterwarnings("ignore")
 
 os.environ["CUDA_LAUNCH_BLOCKING"] = "1"
 current_dir = os.path.dirname(__file__)
@@ -53,7 +60,7 @@ import time
 start = time.time()
 
 
-dataset_folder = os.path.join(current_dir, "datasets", "imerit")
+dataset_folder = os.path.join(current_dir, "datasets", "imerit", "phase1")
 print(f"Dataset Folder: {dataset_folder}")
 dataset_details_file = os.path.join(dataset_folder, "details.cfg")
 dataset_config = configparser.ConfigParser()
@@ -298,3 +305,6 @@ elapsed_time_seconds = end - start
 elapsed_time_hours = elapsed_time_seconds / 3600
 
 print(f"{colors.GREEN}Training time: {elapsed_time_hours} hours{colors.END}")
+
+print("Pushing model Artifacts to S3.....")
+upload_file_to_s3(job_dir, model_name="layoutLMv3-finetuned")

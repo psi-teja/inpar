@@ -5,9 +5,10 @@ interface SingleValuedFieldProps {
   fieldValue: Record<string, any>;
   selectedField: string | null;
   handleFieldClick: (
-    index: number | null,
     fieldName: string,
-    boxLocation: Record<string, any>
+    index: number | null,
+    colName: string | null,
+    location: Record<string, any>
   ) => void;
   handleSingleValuedFieldChange: (
     fieldName: string,
@@ -25,7 +26,7 @@ const SingleValuedField: React.FC<SingleValuedFieldProps> = ({
   handleSingleValuedFieldChange,
 }) => {
 
-  if (fieldValue.location?.pageNo ==0) return;
+  // if (fieldValue.location?.pageNo ==0 && fieldValue.text == "") return;
 
   return (
     <div
@@ -33,10 +34,10 @@ const SingleValuedField: React.FC<SingleValuedFieldProps> = ({
         }`}
       key={fieldName}
       onFocus={() => {
-        handleFieldClick(null, fieldName, fieldValue.location);
+        handleFieldClick(fieldName, null, null, fieldValue.location);
       }}
       onClick={() => {
-        handleFieldClick(null, fieldName, fieldValue.location);
+        handleFieldClick(fieldName, null, null, fieldValue.location);
       }}
     >
       <div className="flex items-center justify-between">
@@ -91,12 +92,7 @@ const SingleValuedField: React.FC<SingleValuedFieldProps> = ({
         className={`text-gray-800 bg-blue-50 rounded-md border border-blue-300 p-2 focus:outline-none w-full ${selectedField === fieldName ? "border border-red-300" : ""
           }`}
         value={fieldValue.text}
-        placeholder="AI couldn't extract this field"
-        style={{
-          minHeight: "40px",
-          height: "auto",
-          maxHeight: "200px",
-        }}
+        placeholder="AI couldn't extract"
         onChange={(e) => {
           handleSingleValuedFieldChange(
             fieldName,
@@ -105,7 +101,10 @@ const SingleValuedField: React.FC<SingleValuedFieldProps> = ({
             "update value"
           );
         }}
+        rows={1}
+        wrap="soft"
       />
+
     </div>
   );
 };

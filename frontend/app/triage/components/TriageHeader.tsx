@@ -8,8 +8,8 @@ interface TriageHeaderProps {
 
 const TriageHeader: React.FC<TriageHeaderProps> = ({ doc_id }) => {
   return (
-    <div className="flex justify-between bg-gradient-to-r from-blue-300 to-gray-200 rounded-md sm:p-2 md:p-4 lg:p-6 xl:p-8 shadow-lg">
-      <Link href="/" className="hover:underline flex items-center">
+    <div className="flex justify-between items-center shadow bg-blue-600 sm:p-1 md:p-2 lg:p-3 xl:p-3">
+      <Link href="/" className="text-white hover:underline flex items-center">
         <HiOutlineArrowLeft className="mr-2 h-6 w-6" />
         Back
       </Link>
@@ -20,7 +20,7 @@ const TriageHeader: React.FC<TriageHeaderProps> = ({ doc_id }) => {
 
       <div className="flex items-center">
         <p className="text-gray-800 mr-2">Document ID:</p>
-        <p className="text-gray-600 font-semibold">{doc_id}</p>
+        <p className="text-gray-800 font-semibold">{doc_id}</p>
       </div>
     </div>
   );

@@ -23,6 +23,7 @@ interface DocViewerProps {
   ) => void;
   selectedField: string | null;
   selectedRow: number | null;
+  colName: string | null;
   dataChanged: boolean;
 }
 
@@ -34,6 +35,7 @@ const DocViewer: React.FC<DocViewerProps> = ({
   handleNestedFieldChange,
   selectedField,
   selectedRow,
+  colName,
   dataChanged,
 }) => {
   const fileUrl = `${BACKEND_URLS.getDocUrl}/${doc_id}`;
@@ -55,8 +57,8 @@ const DocViewer: React.FC<DocViewerProps> = ({
   return (
     <div
       className={`${
-        viewType === "DocInfo" ? "w-[70vw]" : ""
-      }`}
+        viewType === "General" ? "w-[70vw]" : ""
+      } border border-blue-400`}
     >
       <PdfViewer
         file={fileUrl}
@@ -66,6 +68,7 @@ const DocViewer: React.FC<DocViewerProps> = ({
         handleSingleValuedFieldChange={handleSingleValuedFieldChange}
         handleNestedFieldChange={handleNestedFieldChange}
         selectedField={selectedField}
+        colName={colName}
         dataChanged={dataChanged}
         selectedRow={selectedRow}
       />

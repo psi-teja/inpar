@@ -17,7 +17,8 @@ const InteractiveSpace: React.FC<InteractiveSpaceProps> = ({
   );
   const [selectedField, setSelectedField] = useState<string | null>(null);
   const [selectedRow, setSelectedRow] = useState<number | null>(null);
-  const [view, setView] = useState("DocInfo");
+  const [colName, setColName] = useState<string | null>(null);
+  const [view, setView] = useState("General");
 
   const [extractedData, setExtractedData] = useState<{
     [key: string]: any;
@@ -64,57 +65,67 @@ const InteractiveSpace: React.FC<InteractiveSpaceProps> = ({
   };
 
   const handleNestedFieldChange = (
-    fieldType: string,
+    fieldName: string,
     index: number | null,
-    field: string | null,
+    colName: string | null,
     value: string | null,
     location: Record<string, any> | null,
     instruction: string
   ) => {
-    if (index == null || !field) {
+    if (index == null || !colName) {
       return;
     }
-    console.log(boxLocation)
+    // console.log(fieldName, index, colName, value, instruction)
 
     setExtractedData((prevData) => {
       const newData = { ...prevData };
-      const updatedItem = { ...newData[fieldType][index] };
+      const updatedItem = { ...newData[fieldName][index]};
       if (instruction === "update value") {
-        updatedItem[field] = {
-          ...updatedItem[field],
+        updatedItem[colName] = {
+          ...updatedItem[colName],
           text: value ? value : "",
         };
       }
       if (instruction === "add bbox" || instruction === "del bbox") {
-        updatedItem[field] = {
-          ...updatedItem[field],
+        updatedItem[colName] = {
+          ...updatedItem[colName],
           location: location ? location : { pageNo: 0, ltwh: [0, 0, 0, 0] },
         };
         setBoxLocation(location);
       }
-      newData.Table[index] = updatedItem;
+      newData[fieldName][index] = updatedItem;
       return newData;
     });
     setDataChanged(true);
   };
 
-  const handleTableRowDelete = (index: number) => {
+  const handleNestedRowDelete = (fieldName: string, index: number) => {
     setExtractedData((prevData) => {
       const newData = { ...prevData };
-      const updatedTable = [...newData.Table];
-      updatedTable.splice(index, 1);
-      newData.Table = updatedTable;
+      const updatedTable = [...newData[fieldName]];
+  
+      if (updatedTable.length > 1) {
+        updatedTable.splice(index, 1);
+        newData[fieldName] = updatedTable;
+      }
+      else{
+        handleNestedRowAdd(fieldName)
+        handleNestedRowDelete(fieldName, index)
+      }
+  
       return newData;
     });
+  
     setDataChanged(true);
   };
+  
 
-  const handleTableRowAdd = () => {
+  const handleNestedRowAdd = (fieldName: string) => {
     setExtractedData((prevData) => {
       const newData = { ...prevData };
-      const lastRowIndex = newData.Table.length - 1;
+      const lastRowIndex = newData[fieldName].length - 1;
 
-      const lastRow = newData.Table[lastRowIndex];
+      const lastRow = newData[fieldName][lastRowIndex];
 
       const newRow = { ...lastRow };
 
@@ -128,7 +139,7 @@ const InteractiveSpace: React.FC<InteractiveSpaceProps> = ({
         };
       }
 
-      newData.Table = [...newData.Table, { ...newRow }];
+      newData[fieldName] = [...newData[fieldName], { ...newRow }];
 
       return newData;
     });
@@ -213,29 +224,36 @@ const InteractiveSpace: React.FC<InteractiveSpaceProps> = ({
     fetchData();
   }, [doc_id]);
 
-  const changeBox = (
+  const handleFieldClick = (
+    fieldName: string,
     index: number | null,
-    fieldName: string | null,
+    colName: string | null,
     location: Record<string, any>
   ) => {
+
+    // console.log(index)
+    // console.log(fieldName)
+    // console.log(location)
 
     if (location.pageNo !== 0) {
       setSelectedRow(index);
       setBoxLocation(location);
       setSelectedField(fieldName);
+      setColName(colName);
     } else {
       setSelectedRow(index);
       setBoxLocation(null);
       setSelectedField(fieldName);
+      setColName(colName);
     }
   };
 
-  const changeView = (viewType: string) => {
+  const handleChangeView = (viewType: string) => {
     setView(viewType);
   };
 
   return (
-    <div className={`${view === "DocInfo" ? "flex" : ""}`}>
+    <div className={`${view === "General" ? "flex" : ""}`}>
       <DocViewer
         doc_id={doc_id}
         boxLocation={boxLocation}
@@ -244,18 +262,19 @@ const InteractiveSpace: React.FC<InteractiveSpaceProps> = ({
         handleNestedFieldChange={handleNestedFieldChange}
         selectedRow={selectedRow}
         selectedField={selectedField}
+        colName={colName}
         dataChanged={dataChanged}
       />
       <ExtractedFields
-        handleFieldClick={changeBox}
-        handleChangeView={changeView}
+        handleFieldClick={handleFieldClick}
+        handleChangeView={handleChangeView}
         viewType={view}
         selectedField={selectedField}
         extractedData={extractedData}
         handleSingleValuedFieldChange={handleSingleValuedFieldChange}
         handleNestedFieldChange={handleNestedFieldChange}
-        handleTableRowDelete={handleTableRowDelete}
-        handleTableRowAdd={handleTableRowAdd}
+        handleNestedRowDelete={handleNestedRowDelete}
+        handleNestedRowAdd={handleNestedRowAdd}
         isLoading={isLoading}
         nodata={noData}
         dataChanged={dataChanged}

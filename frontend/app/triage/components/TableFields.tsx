@@ -1,7 +1,9 @@
 import React, { useEffect, useState } from "react";
 import AddField from "./AddField";
+import { Textarea } from "@nextui-org/input";
 
 interface TableFieldsProps {
+  fieldName: string;
   fieldValue: any;
   handleNestedFieldChange: (
     fieldType: string,
@@ -11,12 +13,13 @@ interface TableFieldsProps {
     location: Record<string, any> | null,
     instruction: string
   ) => void;
-  handleTableRowDelete: (index: number) => void;
-  handleTableRowAdd: () => void;
+  handleNestedRowDelete: (fieldName: string, index: number) => void;
+  handleNestedRowAdd: (fieldName: string) => void;
   handleFieldClick: (
-    index: number|null,
-    fieldName: string | null,
-    boxLocation: Record<string, any>
+    fieldName: string,
+    index: number | null,
+    colName: string | null,
+    location: Record<string, any>
   ) => void;
 }
 
@@ -25,13 +28,14 @@ interface DisplayCols {
 }
 
 const TableFields: React.FC<TableFieldsProps> = ({
+  fieldName,
   fieldValue,
   handleNestedFieldChange,
-  handleTableRowDelete,
-  handleTableRowAdd,
+  handleNestedRowDelete,
+  handleNestedRowAdd,
   handleFieldClick,
 }) => {
-  const [currIndex, setCurrIndex] = useState(2);
+  const [currIndex, setCurrIndex] = useState<number | null>(null);
   const [currField, setCurrField] = useState<string | null>(null);
   const [displayCols, setDisplayCols] = useState<DisplayCols>({});
 
@@ -39,6 +43,7 @@ const TableFields: React.FC<TableFieldsProps> = ({
     setCurrIndex(index);
     setCurrField(fieldName);
   };
+
   const handleAddField = (fieldName: string) => {
     setDisplayCols((prevData) => {
       if (prevData === null) {
@@ -47,6 +52,14 @@ const TableFields: React.FC<TableFieldsProps> = ({
       const newData = { ...prevData, [fieldName]: !prevData[fieldName] };
       return newData;
     });
+  };
+
+  const handleSelectAll = (selectAll: boolean) => {
+    const newDisplayCols = Object.keys(displayCols).reduce((acc, fieldName) => {
+      acc[fieldName] = selectAll;
+      return acc;
+    }, {} as DisplayCols);
+    setDisplayCols(newDisplayCols);
   };
 
   useEffect(() => {
@@ -61,27 +74,26 @@ const TableFields: React.FC<TableFieldsProps> = ({
     }
 
     setDisplayCols(initialDisplayCols);
-  }, [fieldValue]);
+  }, []);
 
   return (
     <div className="h-[26vh] overflow-auto">
       <table className="min-w-full bg-white">
         <thead className="sticky top-0 z-10 bg-blue-300">
-          <tr>
-            <th className="sticky left-0 bg-blue-100 border-r border-b border-solid border-gray-400">
+          <tr className="bg-blue-500">
+            <th className="sticky left-0 border-r border-b border-solid border-gray-400">
               <AddField
                 displayCols={displayCols}
                 handleAddField={handleAddField}
+                handleSelectAll={handleSelectAll}
               />
             </th>
             {Object.entries(displayCols).map(
               ([fieldName, value]) =>
-                value == true && (
+                value && (
                   <th
                     key={fieldName}
-                    className={`px-2  text-left border-r border-b border-solid border-gray-400 font-medium text-sm text-gray-700 ${
-                      fieldName == currField ? "bg-red-200" : ""
-                    }`}
+                    className={`px-2 text-left text-white border-r border-b border-solid border-gray-400 font-medium text-sm ${fieldName === currField ? "bg-blue-400" : ""}`}
                   >
                     {fieldName}
                   </th>
@@ -93,64 +105,62 @@ const TableFields: React.FC<TableFieldsProps> = ({
           {fieldValue.map((row: any, index: number) => (
             <tr
               key={index}
-              className={`p-0  ${index === currIndex ? "bg-gray-200" : ""}`}
+              className={`p-0 ${index === currIndex ? "bg-gray-200" : ""}`}
             >
               <td
-                className={`sticky left-0 border-b border-r border-solid border-gray-400   ${
-                  index === currIndex ? "bg-gray-200" : "bg-blue-100"
-                }`}
+                className={`sticky left-0 border-b border-r border-solid border-blue-200 ${index === currIndex ? "bg-blue-400" : "bg-blue-500"}`}
               >
                 <button
-                  className="px-3 text-2xl font-bold text-red-400 rounded hover:bg-red-700 hover:text-white focus:outline-none"
-                  onClick={(e) => handleTableRowDelete(index)}
+                  className="px-3 text-xl font-bold text-white rounded hover:bg-red-500 hover:text-white focus:outline-none"
+                  onClick={(e) => handleNestedRowDelete(fieldName, index)}
                 >
                   -
                 </button>
               </td>
               {Object.entries(displayCols).map(
-                ([fieldName, value]) =>
-                  value == true && (
+                ([colName, value]) =>
+                  value && (
                     <td
-                      key={fieldName}
+                      key={colName}
                       onFocus={() => {
-                        handleFieldClick(index, fieldName, row[fieldName].location);
-                        changeCurr(index, fieldName);
+                        handleFieldClick(fieldName, index, colName, row[colName].location);
+                        changeCurr(index, colName);
                       }}
                       onClick={() => {
-                        handleFieldClick(index, fieldName, row[fieldName].location);
-                        changeCurr(index, fieldName);
+                        handleFieldClick(fieldName, index, colName, row[colName].location);
+                        changeCurr(index, colName);
                       }}
-                      className={`p-0 ${(fieldName == currField && index == currIndex)? "bg-red-200": ""}`}
+                      className={`p-0 ${colName === currField && index === currIndex ? "bg-red-200" : ""}`}
                     >
-                      {fieldName !== "id" ? (
-                        <div className="flex justify-content items-center border-r border-b border-solid border-gray-400">
+                      {colName !== "id" ? (
+                        <div className="flex justify-content items-center border-b border-r border-solid border-blue-500">
                           <input
-                            value={row[fieldName]?.text}
+                            value={row[colName]?.text}
                             className="p-1 m-1 h-8 text-xs overflow-x-auto leading-4 border border-gray-300 rounded focus:outline-none focus:border-blue-500 hover:border-blue-400 overflow-x-auto"
                             onChange={(e) =>
                               handleNestedFieldChange(
-                                "Table",
-                                index,
                                 fieldName,
+                                index,
+                                colName,
                                 e.target.value,
-                                row[fieldName].location,
+                                row[colName].location,
                                 "update value"
                               )
                             }
                           />
-                          {row[fieldName]?.location?.pageNo !== 0 && (
+                          {row[colName]?.location?.pageNo !== 0 && (
                             <button
                               onClick={(e) =>
                                 handleNestedFieldChange(
-                                  "Table",
-                                  index,
                                   fieldName,
-                                  row[fieldName].text,
+                                  index,
+                                  colName,
+                                  row[colName].text,
                                   null,
                                   "del bbox"
                                 )
                               }
-                              disabled={fieldName !== currField || index !== currIndex}
+                              disabled={colName !== currField || index !== currIndex}
                               className="relative"
                             >
                               <img
@@ -158,7 +168,7 @@ const TableFields: React.FC<TableFieldsProps> = ({
                                 alt="Draw Box"
                                 className="h-4 w-5 m-2" // Adjust the height and width of the image as needed
                               />
-                              {(fieldName === currField && index === currIndex) && (
+                              {colName === currField && index === currIndex && (
                                 <div className="absolute top-0 left-0 w-full h-full flex items-center justify-center opacity-0 transition-opacity duration-300 ease-in-out hover:opacity-100">
                                   <div className="text-red-500">
                                     <svg
@@ -170,9 +180,9 @@ const TableFields: React.FC<TableFieldsProps> = ({
                                       aria-hidden="true"
                                     >
                                       <path
-                                        stroke-linecap="round"
-                                        stroke-linejoin="round"
-                                        stroke-width="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                        strokeWidth="2"
                                         d="M6 18L18 6M6 6l12 12"
                                       />
                                     </svg>
@@ -183,7 +193,7 @@ const TableFields: React.FC<TableFieldsProps> = ({
                           )}
                         </div>
                       ) : (
-                        row[fieldName].text
+                        row[colName].text
                       )}
                     </td>
                   )
@@ -191,12 +201,16 @@ const TableFields: React.FC<TableFieldsProps> = ({
             </tr>
           ))}
           <tr className="">
-            <button
-              className="px-3 m-1 text-lg font-bold text-green-700 rounded hover:bg-green-700 hover:text-white focus:outline-none"
-              onClick={handleTableRowAdd}
+            <td
+              className={`sticky left-0 border-b border-r border-solid border-gray-400 bg-blue-100`}
             >
-              +
-            </button>
+              <button
+                className="px-3 text-xl font-bold text-green-700 rounded hover:bg-green-700 hover:text-white focus:outline-none"
+                onClick={(e) => handleNestedRowAdd(fieldName)}
+              >
+                +
+              </button>
+            </td>
           </tr>
         </tbody>
       </table>

@@ -3,6 +3,7 @@ import os
 from PIL import Image
 from layoutLMv3_utils import (
     ProcessorWithAWSOCR,
+    ProcessorWithEASYOCR,
     tokenizer,
     calculate_ioa,
     calculate_iou
@@ -13,9 +14,14 @@ from tqdm import tqdm
 current_dir = os.path.dirname(__file__)
 datasetFolder = os.path.join(current_dir, "datasets", "imerit")
 
-imagesFolder = os.path.join(datasetFolder, "images")
-extractedDataFolder = os.path.join(datasetFolder, "tally_ai_jsons")
-labelJsonFolder = os.path.join(datasetFolder, "label_jsons")
+phase = "phase1"
+
+phase_folder = os.path.join(datasetFolder, phase)
+
+imagesFolder = os.path.join(phase_folder, "images")
+extractedDataFolder = os.path.join(phase_folder, "tally_ai_jsons")
+level = "WORD"
+labelJsonFolder = os.path.join(phase_folder, f"label_jsons_easy_ocr")
 
 os.makedirs(labelJsonFolder, exist_ok=True)
 images_list = os.listdir(imagesFolder)
@@ -24,7 +30,7 @@ label_count = {}
 
 show_image = False
 
-processor = ProcessorWithAWSOCR()
+processor = ProcessorWithEASYOCR()
 
 
 for i in tqdm(range(len(images_list)), unit="sample"):
@@ -58,7 +64,10 @@ for i in tqdm(range(len(images_list)), unit="sample"):
     imgW = pil_image.width
     imgH = pil_image.height
 
-    encoding = processor.get_encodings(pil_image)
+    try:
+        encoding = processor.get_encodings(pil_image)
+    except:
+        continue
 
     input_ids = encoding["input_ids"][0].tolist()
     bbox = encoding["bbox"][0].tolist()
@@ -228,7 +237,7 @@ for i in tqdm(range(len(images_list)), unit="sample"):
         json.dump(labelJson, json_file, indent=4)
 
 
-details_file = os.path.join(datasetFolder, "details.cfg")
+details_file = os.path.join(phase_folder, "details.cfg")
 
 with open(details_file, "w") as f:
     f.write("[General]\n")
