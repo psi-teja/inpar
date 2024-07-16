@@ -2,7 +2,6 @@ import json
 import os
 from PIL import Image
 from layoutLMv3_utils import (
-    ProcessorWithAWSOCR,
     ProcessorWithEASYOCR,
     tokenizer,
     calculate_ioa,

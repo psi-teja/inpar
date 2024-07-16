@@ -4,13 +4,11 @@ from PIL import Image, ImageDraw, ImageFont
 import torch.nn.functional as F
 from layoutLMv3_utils import (
     tokenizer,
-    ProcessorWithAWSOCR,
     ProcessorWithEASYOCR,
     get_label_from_sum_conf,
     biased_softmax,
     calculate_ioa,
     remove_unnecessary_tokens,
-    download_model_from_s3
 )
 import time
 
@@ -18,9 +16,6 @@ current_dir = os.path.dirname(__file__)
 
 job_id = "20240705105520"
 job_dir = os.path.join(current_dir, "results", "runs", job_id)
-
-if not os.path.exists(job_dir):
-    download_model_from_s3(job_dir)
 
 saved_model_dir = os.path.join(job_dir, "saved_model")
 

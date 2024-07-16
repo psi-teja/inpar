@@ -1,13 +1,12 @@
 import re
 from torch.utils.data import Dataset
-import os, json, boto3
+import os, json
 from PIL import Image, ImageDraw
 import numpy as np
 import cv2, io
 from transformers import LayoutLMv3Processor, LayoutLMv3Tokenizer
 import math, torch
 import torch.nn.functional as F
-from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 import zipfile
 import easyocr
 
@@ -102,59 +101,6 @@ class ProcessorWithEASYOCR:
             return_tensors="pt",
         )
         return encodings
-
-class ProcessorWithAWSOCR:
-    def __init__(self, selected_level) -> None:
-        self.textract = boto3.client("textract", region_name="ap-south-1")
-        self.level = selected_level
-
-    def get_aws_ocr_data(self, imageBytes):
-        response = self.textract.detect_document_text(Document={"Bytes": imageBytes})
-        texts = []
-        bboxes = []
-        for item in response["Blocks"]:
-            if item["BlockType"] == self.level:
-                texts.append(item["Text"])
-                bboxes.append(
-                    [
-                        item["Geometry"]["BoundingBox"]["Left"],
-                        item["Geometry"]["BoundingBox"]["Top"],
-                        item["Geometry"]["BoundingBox"]["Width"],
-                        item["Geometry"]["BoundingBox"]["Height"],
-                    ]
-                )
-        return {"texts": texts, "bboxes_ltwh": bboxes}
-
-    def get_encodings(self, pil_image):
-        # Convert PIL image to bytes
-        img_byte_arr = io.BytesIO()
-        pil_image.save(img_byte_arr, format="PNG")
-        image_bytes = img_byte_arr.getvalue()
-
-        # Get OCR data from AWS Textract
-        ocr_data = self.get_aws_ocr_data(image_bytes)
-
-        scaled_bboxes_xyxy = []
-
-        for bbox in ocr_data["bboxes_ltwh"]:
-            l, t, w, h = bbox
-
-            scaled_x1 = int(l * 1000)
-            scaled_y1 = int(t * 1000)
-            scaled_x2 = int((l + w) * 1000)
-            scaled_y2 = int((t + h) * 1000)
-
-            scaled_bboxes_xyxy.append([scaled_x1, scaled_y1, scaled_x2, scaled_y2])
-
-        # Get encodings using the processor without built-in OCR
-        encodings = processor_without_ocr(
-            pil_image,
-            text=ocr_data["texts"],
-            boxes=scaled_bboxes_xyxy,
-            return_tensors="pt",
-        )
-        return encodings
-
 
 class colors:
     PURPLE = "\033[95m"
@@ -363,29 +309,6 @@ def preprocess_image_cv(image):
     return blurred_image
 
 
-def upload_folder_to_s3(local_folder_path, bucket_name, s3_folder_path):
-    session = boto3.Session(profile_name="Developers_custom2_dev-pb-393436098818")
-
-    # Create an S3 client using the session
-    s3 = session.client("s3")
-    # Walk through the local folder and upload each file to S3
-    for root, dirs, files in os.walk(local_folder_path):
-        for filename in files:
-            local_file_path = os.path.join(root, filename)
-            # Construct the S3 key by removing the local folder path and joining with the S3 folder path
-            s3_key = os.path.relpath(local_file_path, local_folder_path)
-            s3_key = os.path.join(s3_folder_path, s3_key)
-
-            s3_key = s3_key.replace("\\", "/")
-
-            # Upload the file to S3
-            s3.upload_file(local_file_path, bucket_name, s3_key)
-
-    print(
-        f"{colors.GREEN}Uploaded {local_folder_path} to s3://{bucket_name}/{s3_folder_path}{colors.END}"
-    )
-
-
 def fraction_to_ratio(numerator, denominator):
     # Calculate the greatest common divisor (GCD)
     gcd = math.gcd(numerator, denominator)
@@ -590,73 +513,6 @@ def convert_labels(tally_ai_json):
 
 
     return tally_ai_json
-
-def download_model_from_s3(job_dir):
-    job_id = os.path.basename(job_dir)
-    os.makedirs(job_dir, exist_ok=True)
-    s3_client = boto3.client('s3')
-    zip_filename = f"{job_id}.zip"
-    zip_file_path = job_dir+".zip"
-    s3_key = f"{model_name}/{zip_filename}"
-    try:
-        s3_client.download_file(model_artifacts_bucket, s3_key, zip_file_path)
-        print(f"Downloaded {zip_file_path} from S3 bucket {model_artifacts_bucket}/{s3_key}")
-        
-        # Extract the zip file
-        with zipfile.ZipFile(zip_file_path, 'r') as zip_ref:
-            zip_ref.extractall(job_dir)
-        print(f"Extracted {zip_file_path} to {job_dir}")
-        
-        # Remove the zip file after extraction
-        os.remove(zip_file_path)
-        print(f"Deleted zip file {zip_file_path} after extraction")
-    except FileNotFoundError:
-        print(f"The file {zip_file_path} was not found")
-    except NoCredentialsError:
-        print("Credentials not available")
-    except PartialCredentialsError:
-        print("Incomplete credentials provided")
-    except Exception as e:
-        print(f"An error occurred: {str(e)}")
-
-def zip_directory(folder_path, zip_file_path):
-    """Zip the contents of an entire directory."""
-    with zipfile.ZipFile(zip_file_path, 'w', zipfile.ZIP_DEFLATED) as zipf:
-        for root, dirs, files in os.walk(folder_path):
-            for file in files:
-                file_path = os.path.join(root, file)
-                arcname = os.path.relpath(file_path, start=folder_path)
-                zipf.write(file_path, arcname)
-    print(f"Directory {folder_path} zipped into {zip_file_path}")
-
-def upload_file_to_s3(folder_path, model_name):
-    """Upload a file to an S3 bucket."""
-    s3_client = boto3.client('s3')
-
-    zip_file_path = folder_path+".zip"
-
-    zip_filename = os.path.basename(zip_file_path)
-
-    zip_directory(folder_path, zip_file_path)
-
-    s3_key = f"{model_name}/{zip_filename}"
-
-    try:
-        s3_client.upload_file(zip_file_path, model_artifacts_bucket, s3_key)
-        print(f"File {zip_file_path} uploaded to {model_artifacts_bucket}/{s3_key}")
-
-        os.remove(zip_file_path)
-        print(f"File {zip_file_path} deleted after upload")
-
-    except FileNotFoundError:
-        print(f"The file {zip_file_path} was not found")
-    except NoCredentialsError:
-        print("Credentials not available")
-    except PartialCredentialsError:
-        print("Incomplete credentials provided")
-    except Exception as e:
-        print(f"An error occurred: {str(e)}")
-
 
 if __name__ == "__main__":
 

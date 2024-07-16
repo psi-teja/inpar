@@ -1,4 +1,4 @@
-import os, tarfile, shutil
+import os
 from tqdm import tqdm
 import pandas as pd
 import configparser
@@ -8,7 +8,7 @@ import torch.nn as nn
 import torch.optim as optim
 from torch.utils.data import DataLoader
 from transformers import LayoutLMv3ForTokenClassification, LayoutLMv3Config
-from layoutLMv3_utils import upload_folder_to_s3, CustomDataset, colors, fraction_to_ratio, device
+from layoutLMv3_utils import  CustomDataset, colors, fraction_to_ratio, device
 
 current_dir = os.path.dirname(__file__)
 
