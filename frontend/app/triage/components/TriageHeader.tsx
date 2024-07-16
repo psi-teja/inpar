@@ -18,9 +18,9 @@ const TriageHeader: React.FC<TriageHeaderProps> = ({ doc_id }) => {
         Invoice Parsing
       </h1>
 
-      <div className="flex items-center">
-        <p className="text-gray-800 mr-2">Document ID:</p>
-        <p className="text-gray-800 font-semibold">{doc_id}</p>
+      <div className="flex items-center text-white">
+        <p className="mr-2">Document ID:</p>
+        <p className="font-semibold">{doc_id}</p>
       </div>
     </div>
   );

@@ -63,18 +63,52 @@ const TableFields: React.FC<TableFieldsProps> = ({
   };
 
   useEffect(() => {
+    let predefinedFields: string[] = [];
+
+    if (fieldName === "LedgerDetails") {
+      predefinedFields = ['LedgerName', 'LedgerRate', 'LedgerAmount'];
+    } else {
+      predefinedFields = ["ActualQty",
+        "BilledQty",
+        "CGSTAmount",
+        "DiscountAmount",
+        "DiscountRate",
+        "HSNSACCode",
+        "IGSTAmount",
+        "ItemAmount",
+        "ItemBox",
+        "ItemName",
+        "ItemDescription",
+        "ItemRate",
+        "ItemRateUOM",
+        "SGSTAmount"];
+    }
+
     const initialDisplayCols: DisplayCols = {};
 
-    for (const field in fieldValue[0]) {
-      initialDisplayCols[field] = fieldValue.every(
-        (row: any) => row[field].text === ""
-      )
-        ? false
-        : true;
+    // Ensure all predefinedFields exist in every row, else add dummy value
+    for (const field of predefinedFields) {
+      fieldValue.forEach((row: any) => {
+        if (!row[field]) {
+          row[field] = {
+            text: "",
+            location: { pageNo: 0, ltwh: [0, 0, 0, 0, 0] }
+          };
+        }
+      });
+
+      initialDisplayCols[field] = fieldValue.some(
+        (row: any) => row[field]?.text !== ""
+      );
     }
 
     setDisplayCols(initialDisplayCols);
-  }, []);
+  }, [fieldName, fieldValue]);
+
+
+
+
+
 
   return (
     <div className="h-[26vh] overflow-auto">

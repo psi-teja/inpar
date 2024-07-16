@@ -1,0 +1,56 @@
+{
+    "version": "2.0.0",
+    "tasks": [
+        {
+            "label": "Run Django Backend",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "manage.py",
+                "runserver"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/django_backend"
+            },
+            "problemMatcher": [],
+            "detail": "Run the Django backend server"
+        },
+        {
+            "label": "Run Extractor",
+            "type": "shell",
+            "command": "python",
+            "args": [
+                "extractor_server.py"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/extractor"
+            },
+            "problemMatcher": [],
+            "detail": "Run the invoice extractor"
+        },
+        {
+            "label": "Run Frontend",
+            "type": "shell",
+            "command": "npm",
+            "args": [
+                "run",
+                "dev"
+            ],
+            "options": {
+                "cwd": "${workspaceFolder}/frontend"
+            },
+            "problemMatcher": [],
+            "detail": "Run the Next.js frontend"
+        },
+        {
+            "label": "Run All",
+            "dependsOn": [
+                "Run Django Backend",
+                "Run Extractor",
+                "Run Frontend"
+            ],
+            "problemMatcher": [],
+            "detail": "Run all tasks"
+        }
+    ]
+}
