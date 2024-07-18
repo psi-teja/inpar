@@ -4,6 +4,10 @@
 
 InPar is a robust system for parsing invoices using a combination of LayoutLM and YOLO models. The system is built with a Next.js frontend, a Django backend, and an invoice extractor that processes documents by subscribing to a Redis queue.
 
+<p align="center">
+  <img src="display.gif" alt="Working" style="border: 2px solid black; border-radius: 5px;">
+</p>
+
 ## Stack Used
 - **Next.js** (Frontend)
 - **Django** (Backend)

@@ -3,9 +3,7 @@ import { useState, useEffect } from "react";
 import Link from "next/link";
 import Select from "react-select";
 import BACKEND_URLS from "../BackendUrls";
-import { FaSpinner } from "react-icons/fa";
-import { FaExclamationCircle } from "react-icons/fa"; // Import icon from react-icons library
-
+import { FaSpinner, FaExclamationCircle } from "react-icons/fa";
 
 interface SubTableRow {
   doc_id: string;
@@ -24,14 +22,13 @@ function Submissions() {
   const [isLoading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
+  const [triageReady, setTriageReady] = useState<boolean>(false);
 
   // Filter states for each column
   const [docIdFilter, setDocIdFilter] = useState<Option[]>([]);
   const [statusFilter, setStatusFilter] = useState<Option[]>([]);
   const [localFileFilter, setLocalFileFilter] = useState<Option[]>([]);
   const [insertedTimeFilter, setInsertedTimeFilter] = useState<Option[]>([]);
-  const [triageReady, setTriageReady] = useState<boolean>(false);
-
 
   useEffect(() => {
     const fetchData = async () => {
@@ -72,7 +69,7 @@ function Submissions() {
   if (isLoading) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <FaSpinner className="animate-spin text-4xl text-gray-600" /> {/* Rotating spinner */}
+        <FaSpinner className="animate-spin text-4xl text-gray-600" />
       </div>
     );
   }
@@ -80,9 +77,9 @@ function Submissions() {
   if (error) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
-        <p className="text-xl text-red-500 mb-4">Error: {error}</p> {/* Error message */}
+        <p className="text-xl text-red-500 mb-4">Error: {error}</p>
         <button
-          onClick={() => window.location.reload()} // Refresh the page on button click
+          onClick={() => window.location.reload()}
           className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
         >
           Refresh
@@ -94,8 +91,8 @@ function Submissions() {
   if (filteredData.length === 0) {
     return (
       <div className="flex flex-col items-center justify-center h-screen">
-        <FaExclamationCircle className="text-5xl text-gray-400 mb-4" /> {/* Icon */}
-        <p className="text-xl text-gray-600">No data available</p> {/* Text */}
+        <FaExclamationCircle className="text-5xl text-gray-400 mb-4" />
+        <p className="text-xl text-gray-600">No data available</p>
       </div>
     );
   }
@@ -103,61 +100,63 @@ function Submissions() {
   if (triageReady) {
     return (
       <div className="flex items-center justify-center h-screen">
-        <FaSpinner className="animate-spin text-4xl text-gray-600" /> {/* Rotating spinner */}
+        <FaSpinner className="animate-spin text-4xl text-gray-600" />
       </div>
     );
   }
 
   return (
     <div className="max-w-5xl mx-auto mt-4">
-      <div className="bg-slate-500 text-black rounded-md p-4">
-        <div className="grid grid-cols-4 gap-3 text-xl">
-          <div className="text-left">
-            <h1>Document ID</h1>
-            <Select
-              isMulti
-              value={docIdFilter}
-              onChange={(selected) => setDocIdFilter(selected as Option[])}
-              options={uniqueDocIds.map(toOption)}
-              className="mt-1"
-            />
-          </div>
-          <div className="text-left">
-            <h1>Uploaded File</h1>
-            <Select
-              isMulti
-              value={localFileFilter}
-              onChange={(selected) => setLocalFileFilter(selected as Option[])}
-              options={uniqueLocalFiles.map(toOption)}
-              className="mt-1"
-            />
-          </div>
-          <div className="text-center">
-            <h1>Status</h1>
-            <Select
-              isMulti
-              value={statusFilter}
-              onChange={(selected) => setStatusFilter(selected as Option[])}
-              options={uniqueStatuses.map(toOption)}
-              className="mt-1"
-            />
-          </div>
-          <div className="text-right">
-            <h1>Inserted Time (IST)</h1>
-            <Select
-              isMulti
-              value={insertedTimeFilter}
-              onChange={(selected) => setInsertedTimeFilter(selected as Option[])}
-              options={uniqueInsertedTimes.map(toOption)}
-              className="mt-1"
-            />
-          </div>
-        </div>
-      </div>
-      <div className="h-[75vh] overflow-y-auto">
+     <div className="bg-gradient-to-br from-blue-500 to-cyan-400 text-gray-800 rounded-md p-6 shadow-lg">
+  <div className="grid grid-cols-4 gap-6 text-lg">
+    <div className="text-left">
+      <h1 className="text-white font-bold mb-3">Document ID</h1>
+      <Select
+        isMulti
+        value={docIdFilter}
+        onChange={(selected) => setDocIdFilter(selected as Option[])}
+        options={uniqueDocIds.map(toOption)}
+        className="mt-2"
+      />
+    </div>
+    <div className="text-left">
+      <h1 className="text-white font-bold mb-3">Uploaded File</h1>
+      <Select
+        isMulti
+        value={localFileFilter}
+        onChange={(selected) => setLocalFileFilter(selected as Option[])}
+        options={uniqueLocalFiles.map(toOption)}
+        className="mt-2"
+      />
+    </div>
+    <div className="text-center">
+      <h1 className="text-white font-bold mb-3">Status</h1>
+      <Select
+        isMulti
+        value={statusFilter}
+        onChange={(selected) => setStatusFilter(selected as Option[])}
+        options={uniqueStatuses.map(toOption)}
+        className="mt-2"
+      />
+    </div>
+    <div className="text-right">
+      <h1 className="text-white font-bold mb-3">Inserted Time (IST)</h1>
+      <Select
+        isMulti
+        value={insertedTimeFilter}
+        onChange={(selected) => setInsertedTimeFilter(selected as Option[])}
+        options={uniqueInsertedTimes.map(toOption)}
+        className="mt-2"
+      />
+    </div>
+  </div>
+</div>
+
+
+      <div className="h-[75vh] overflow-y-auto mt-4">
         {filteredData.map((item) => (
           <div
-            className="my-4 p-4 bg-white border border-gray-300 rounded-md shadow-md hover:shadow-lg transition duration-300 ease-in-out"
+            className={`my-4 p-4 bg-white border border-gray-300 rounded-md shadow-md hover:shadow-lg transition duration-300 ease-in-out ${hoveredRow === item.doc_id ? 'bg-blue-100' : ''}`}
             key={item.doc_id}
           >
             <div className="grid grid-cols-4 gap-4 items-center">
@@ -178,7 +177,7 @@ function Submissions() {
                   }}
                   onMouseEnter={() => setHoveredRow(item.doc_id)}
                   onMouseLeave={() => setHoveredRow(null)}
-                  onClick={() => setTriageReady(true)} // Add this line
+                  onClick={() => setTriageReady(true)}
                   className={`text rounded-lg p-2 cursor-pointer ${item.status === "processed"
                       ? "bg-green-200"
                       : item.status === "inqueue"

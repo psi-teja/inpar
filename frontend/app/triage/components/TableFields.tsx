@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from "react";
 import AddField from "./AddField";
-import { Textarea } from "@nextui-org/input";
 
 interface TableFieldsProps {
   fieldName: string;
@@ -82,7 +81,8 @@ const TableFields: React.FC<TableFieldsProps> = ({
         "IGSTAmount",
         "ItemRate",
         "ItemRateUOM",
-        "SGSTAmount"];
+        "SGSTAmount"
+      ];
     }
 
     const initialDisplayCols: DisplayCols = {};
@@ -106,17 +106,12 @@ const TableFields: React.FC<TableFieldsProps> = ({
     setDisplayCols(initialDisplayCols);
   }, [fieldName]);
 
-
-
-
-
-
   return (
     <div className="h-[26vh] overflow-auto">
       <table className="min-w-full bg-white">
-        <thead className="sticky top-0 z-10 bg-blue-300">
-          <tr className="bg-blue-500">
-            <th className="sticky left-0 border-r border-b border-solid border-gray-400">
+        <thead className="sticky top-0 z-10">
+          <tr className="">
+            <th className="sticky left-0 border-r border-b border-solid border-gray-400 bg-gray-300">
               <AddField
                 displayCols={displayCols}
                 handleAddField={handleAddField}
@@ -128,7 +123,7 @@ const TableFields: React.FC<TableFieldsProps> = ({
                 value && (
                   <th
                     key={fieldName}
-                    className={`px-2 text-left  border-r border-b border-solid border-gray-400 font-medium text-sm ${fieldName === currField ? "bg-blue-300" : "text-white"}`}
+                    className={`px-2 text-left border-r border-b border-solid border-gray-400 font-medium text-sm ${fieldName === currField ? "bg-cyan-300" : "bg-blue-500 text-white"}`}
                   >
                     {fieldName}
                   </th>
@@ -143,10 +138,10 @@ const TableFields: React.FC<TableFieldsProps> = ({
               className={`p-0 ${index === currIndex ? "bg-gray-200" : ""}`}
             >
               <td
-                className={`sticky left-0 border-b border-r border-solid border-blue-200 ${index === currIndex ? "bg-blue-300" : "bg-blue-500"}`}
+                className={`sticky left-0 border-b border-r border-solid border-blue-200 ${index === currIndex ? "bg-cyan-300" : "bg-gray-300"}`}
               >
                 <button
-                  className="px-3 text-xl font-bold text-white rounded hover:bg-red-500 hover:text-white focus:outline-none"
+                  className={`px-3 text-xl font-bold rounded hover:bg-red-500 text-black focus:outline-none hover:text-white`}
                   onClick={(e) => handleNestedRowDelete(fieldName, index)}
                 >
                   -
@@ -240,7 +235,7 @@ const TableFields: React.FC<TableFieldsProps> = ({
               className={`sticky left-0 border-b border-r border-solid border-gray-400 bg-blue-100`}
             >
               <button
-                className="px-3 text-xl font-bold text-green-700 rounded hover:bg-green-700 hover:text-white focus:outline-none"
+                className="px-3 text-xl font-bold text-black rounded hover:bg-green-700 hover:text-white focus:outline-none"
                 onClick={(e) => handleNestedRowAdd(fieldName)}
               >
                 +

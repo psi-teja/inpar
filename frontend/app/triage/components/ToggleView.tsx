@@ -9,13 +9,16 @@ const ToggleView: React.FC<ToggleViewProps> = ({
     viewType,
     handleChangeView
 }) => {
-    const buttonBaseClass = "text-gray-800 px-3 py-1 rounded-t border-r border-black focus:outline-none";
+    const buttonBaseClass =
+        'px-2 py-1 rounded-t-lg focus:outline-none transition duration-200 ease-in-out';
 
-    const activeButtonClass = "bg-blue-500 text-white";
-    const inactiveButtonClass = "bg-gray-300 text-gray-700 hover:bg-blue-300 hover:text-gray-800";
+    const activeButtonClass =
+        'bg-blue-500 text-white shadow-md transform scale-105';
+    const inactiveButtonClass =
+        'bg-gray-300 text-gray-700 hover:bg-blue-300 hover:text-white';
 
     return (
-        <div className="flex ml-3">
+        <div className={`flex ${(viewType=="General")? "ml-3": "ml-20"}`}>
             <button
                 className={`${buttonBaseClass} ${viewType === "General" ? activeButtonClass : inactiveButtonClass}`}
                 onClick={() => handleChangeView("General")}
@@ -35,7 +38,7 @@ const ToggleView: React.FC<ToggleViewProps> = ({
                 Ledgers
             </button>
         </div>
-    )
+    );
 }
 
 export default ToggleView;

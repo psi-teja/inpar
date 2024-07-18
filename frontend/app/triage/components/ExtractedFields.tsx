@@ -131,7 +131,7 @@ const ExtractedFields: React.FC<ExtractedFieldsProps> = ({
           }`}
       >
         <div className="flex justify-between sm:text-xs md:text-xs lg:text-lg xl:text-lg ml-auto">
-          <ToggleView viewType={viewType} handleChangeView={handleChangeView}/>
+          <ToggleView viewType={viewType} handleChangeView={handleChangeView} />
           <div
             className="hover:bg-gray-200 rounded mr-2"
             title="Download JSON"
@@ -166,14 +166,14 @@ const ExtractedFields: React.FC<ExtractedFieldsProps> = ({
             renderField(fieldName, fieldValue)
           )}
       </div>
-      <div className="p-4 sm:mt-2 md:mt-3 lg:mt-4 xl:mt-4">
+      <div className="p-4 sm:mt-2 md:mt-3 lg:mt-4 xl:mt-4 flex justify-center space-x-4">
         <button
           onClick={handleSave}
           disabled={!dataChanged}
           className={`${dataChanged
-            ? "bg-green-600 hover:bg-green-800"
-            : "bg-gray-300 text-gray-400 cursor-not-allowed"
-            } text-white p-1 mr-2 rounded-md transition duration-300 ease-in-out focus:outline-none focus:ring focus:border-blue-300`}
+              ? "bg-green-600 hover:bg-green-800"
+              : "bg-gray-300 text-gray-400 cursor-not-allowed"
+            } text-white py-2 px-4 rounded-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-green-300`}
         >
           Save
         </button>
@@ -181,13 +181,14 @@ const ExtractedFields: React.FC<ExtractedFieldsProps> = ({
           onClick={handleDiscard}
           disabled={!dataChanged}
           className={`${dataChanged
-            ? "bg-red-500 hover:bg-red-700"
-            : "bg-gray-300 text-gray-400 cursor-not-allowed"
-            } text-white p-1 ml-2 rounded-md transition duration-300 ease-in-out focus:outline-none focus:ring focus:border-blue-300`}
+              ? "bg-red-500 hover:bg-red-700"
+              : "bg-gray-300 text-gray-400 cursor-not-allowed"
+            } text-white py-2 px-4 rounded-md transition duration-300 ease-in-out focus:outline-none focus:ring-2 focus:ring-red-300`}
         >
           Discard
         </button>
       </div>
+
     </div>
   );
 };
