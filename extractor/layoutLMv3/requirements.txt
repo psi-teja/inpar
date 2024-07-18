@@ -1,8 +1,0 @@
-opencv-python
-pytesseract
-xlsxwriter
-scikit-learn
-pdf2image
-pypdf2
-openpyxl
-seaborn

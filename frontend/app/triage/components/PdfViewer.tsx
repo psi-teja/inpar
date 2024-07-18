@@ -3,6 +3,9 @@ import { Document, Page, pdfjs } from "react-pdf";
 import "react-pdf/dist/esm/Page/TextLayer.css";
 import "react-pdf/dist/esm/Page/AnnotationLayer.css";
 import PdfTools from "./PdfTools";
+import BACKEND_URLS from "@/app/BackendUrls";
+import { FaSpinner } from "react-icons/fa";
+
 
 pdfjs.GlobalWorkerOptions.workerSrc = `//cdnjs.cloudflare.com/ajax/libs/pdf.js/${pdfjs.version}/pdf.worker.min.js`;
 
@@ -53,23 +56,38 @@ const PdfViewer: React.FC<PdfViewerProps> = ({
   const [endY, setEndY] = useState<number>(0);
   const boundingBoxRef = useRef<HTMLDivElement | null>(null);
   const viewerRef = useRef<HTMLDivElement | null>(null);
+  const [loading, setLoading] = useState<boolean>(true); // State for loading spinner
+
   // const [showScrollbar, setShowScrollbar] = useState<boolean>(false);
 
   const viewerLoc = viewerRef.current?.getBoundingClientRect();
 
+  // Fetch PDF dimensions on initial load or file change
   useEffect(() => {
     const fetchPdfDimensions = async () => {
-      const pdfDoc = await pdfjs.getDocument(file).promise;
-      const firstPage = await pdfDoc.getPage(1);
-      const { width, height } = firstPage.getViewport({ scale: 1 });
-      setPdfDim({ width, height });
+      try {
+        const pdfDoc = await pdfjs.getDocument(file).promise;
+        const firstPage = await pdfDoc.getPage(1);
+        const viewport = firstPage.getViewport({ scale: 1 });
+        setPdfDim({ width: viewport.width, height: viewport.height });
+        setNumPages(pdfDoc.numPages);
+        setLoading(false); // Mark loading as complete
+      } catch (error) {
+        console.error("Error fetching PDF dimensions:", error);
+        setLoading(false); // Mark loading as complete even if there's an error
+      }
     };
+
     fetchPdfDimensions();
   }, [file, viewType]);
 
+  // Adjust scale when PDF dimensions or viewer dimensions change
   useEffect(() => {
-    viewerLoc ? setScale(viewerLoc.width / pdfDim.width) : "";
-  }, [pdfDim]);
+    if (pdfDim.width && viewerRef.current) {
+      const viewerWidth = viewerRef.current.clientWidth;
+      setScale(viewerWidth / pdfDim.width);
+    }
+  }, [pdfDim, viewerRef]);
 
   useEffect(() => {
     if (boundingBoxRef.current) {
@@ -265,15 +283,32 @@ const PdfViewer: React.FC<PdfViewerProps> = ({
 
         // Send the image to the OCR endpoint
         const formData = new FormData();
-            formData.append("file", blob, "cropped_image.png");
+        formData.append("file", blob, "cropped_image.png");
 
         try {
-          const response = await fetch("http://localhost:8000/db_connect/get/ocr_text/", {
+          const response = await fetch(`${BACKEND_URLS.getOCRText}`, {
             method: "POST",
             body: formData,
           });
           const data = await response.json();
-          console.log("OCR Result:", data.text);
+          // console.log("OCR Result:", data.text);
+          if (selectedField != "Table" && selectedField != "LedgerDetails") {
+            handleSingleValuedFieldChange(
+              selectedField,
+              data.text,
+              null,
+              "update value"
+            );
+          } else {
+            handleNestedFieldChange(
+              selectedField,
+              selectedRow,
+              colName,
+              data.text,
+              null,
+              "update value"
+            );
+          }
         } catch (error) {
           console.error("Error during OCR:", error);
         }
@@ -283,6 +318,14 @@ const PdfViewer: React.FC<PdfViewerProps> = ({
       setStartY(0);
     }
   };
+
+  if (loading) {
+    return (
+      <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75">
+        <FaSpinner className="animate-spin text-4xl text-gray-600" /> {/* Rotating spinner */}
+      </div>
+    );
+  }
 
 
   return (
@@ -298,16 +341,20 @@ const PdfViewer: React.FC<PdfViewerProps> = ({
         handleScaleChange={handleScaleChange}
       />
       <div
-        className={`${
-          viewType === "General" ? "w-[70vw] h-[87.5vh]" : "h-[50vh]"
-        } overflow-auto scroll-smooth ${(!boxLocation && selectedField)? "cursor-crosshair":""}`}
-        onMouseDown={handleMouseDown}
-        onMouseMove={handleMouseMove}
-        onMouseUp={handleMouseUp}
+        className={`${viewType === "General" ? "w-[70vw] h-[87.5vh]" : "h-[50vh]"
+          } overflow-auto scroll-smooth ${(!boxLocation && selectedField) ? "cursor-crosshair" : ""}`}
         ref={viewerRef}
       >
+        {loading &&
+        <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75">
+          <FaSpinner className="animate-spin text-4xl text-gray-600" /> {/* Rotating spinner */}
+        </div>}
         <Document file={file} onLoadSuccess={onDocumentLoadSuccess}>
-          <Page pageNumber={pageNumber} scale={scale}>
+          <Page pageNumber={pageNumber} scale={scale}
+            onMouseDown={handleMouseDown}
+            onMouseMove={handleMouseMove}
+            onMouseUp={handleMouseUp}
+          >
             {renderAnnotations()}
           </Page>
         </Document>

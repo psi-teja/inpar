@@ -14,7 +14,8 @@ import redis
 import os
 import io
 from datetime import datetime
-import logging
+import logging, shutil
+import pytesseract
 
 # Initialize Redis client
 redis_client = redis.StrictRedis(host='localhost', port=6379, db=0)
@@ -159,3 +160,89 @@ def save_data(request, json_type: str, doc_id: str):
     except Exception as e:
         logger.error(f"Error saving data: {e}")
         return JsonResponse({'error': str(e)}, status=500)
+
+
+
+@csrf_exempt
+def upload_pre_labels(request):
+
+    purpose = "addLedger"
+
+    if request.method == 'POST':
+        try:
+            data = json.loads(request.body.decode('utf-8'))
+            images_folder = data.get('images_folder')
+            jsons_folder = data.get('jsons_folder')
+
+            if not images_folder or not jsons_folder:
+                return JsonResponse({'status': 'error', 'message': 'Folders paths not provided'}, status=400)
+
+            # Ensure the folders exist
+            if not os.path.exists(images_folder) or not os.path.exists(jsons_folder):
+                return JsonResponse({'status': 'error', 'message': 'Folders do not exist'}, status=400)
+
+            # Process each image in the images folder
+            for image_filename in os.listdir(images_folder):
+                if image_filename.endswith(('png', 'jpg', 'jpeg')):
+                    image_path = os.path.join(images_folder, image_filename)
+                    doc_id = os.path.splitext(image_filename)[0]
+
+                    # Corresponding JSON file path
+                    json_filename = doc_id + '.json'
+                    json_path = os.path.join(jsons_folder, json_filename)
+
+                    if not os.path.exists(json_path):
+                        logger.warning(f"JSON file for {image_filename} not found, skipping.")
+                        continue
+
+                    # Save the image file
+                    upload_dir = os.path.join(settings.BASE_DIR, 'input_docs')
+                    os.makedirs(upload_dir, exist_ok=True)
+                    s3_filename = f'{doc_id}.{image_filename.split(".")[-1]}'
+                    file_path = os.path.join(upload_dir, s3_filename)
+
+                    shutil.copy(image_path, file_path)
+
+                    # Save data to SubTable
+                    SubTable.objects.create(
+                        doc_id=doc_id,
+                        s3_file=s3_filename,
+                        local_file=image_filename,
+                        status=purpose
+                    )
+
+                    output_json_dir = os.path.join(settings.BASE_DIR, 'output_jsons', purpose)
+                    os.makedirs(output_json_dir, exist_ok=True)
+                    output_json_path = os.path.join(output_json_dir, f'{doc_id}.json')
+
+                    shutil.copy(json_path, output_json_path)
+
+                    # Update status to processed
+                    # SubTable.objects.filter(doc_id=doc_id).update(status="processed")
+
+            return JsonResponse({'status': 'success', 'message': 'Pre-labeled data uploaded successfully'})
+        except json.JSONDecodeError:
+            logger.error("Invalid JSON format received.")
+            return JsonResponse({'error': 'Invalid JSON format'}, status=400)
+        except Exception as e:
+            logger.error(f"Error uploading pre-labeled data: {e}")
+            return JsonResponse({'error': str(e)}, status=500)
+    else:
+        return JsonResponse({'status': 'error', 'message': 'Invalid request method'}, status=400)
+
+
+@csrf_exempt
+def get_ocr_text(request):
+    if request.method == 'POST' and request.FILES['file']:
+        uploaded_file = request.FILES['file']
+
+        # Use Pillow to open the uploaded image file
+        image = Image.open(uploaded_file)
+
+        # Apply OCR using pytesseract
+        text = pytesseract.image_to_string(image)
+
+        # Return the extracted text as JSON response
+        return JsonResponse({'text': text})
+
+    return JsonResponse({'error': 'POST method and file data required'})

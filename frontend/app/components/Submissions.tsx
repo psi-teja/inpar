@@ -1,7 +1,11 @@
 "use client";
 import { useState, useEffect } from "react";
 import Link from "next/link";
+import Select from "react-select";
 import BACKEND_URLS from "../BackendUrls";
+import { FaSpinner } from "react-icons/fa";
+import { FaExclamationCircle } from "react-icons/fa"; // Import icon from react-icons library
+
 
 interface SubTableRow {
   doc_id: string;
@@ -10,58 +14,150 @@ interface SubTableRow {
   inserted_time: string;
 }
 
+interface Option {
+  value: string;
+  label: string;
+}
+
 function Submissions() {
   const [data, setData] = useState<SubTableRow[]>([]);
   const [isLoading, setLoading] = useState<boolean>(true);
+  const [error, setError] = useState<string | null>(null);
   const [hoveredRow, setHoveredRow] = useState<string | null>(null);
 
-  const getTextOnHover = (item: SubTableRow) => {
-    if (hoveredRow === item.doc_id) {
-      return item.status === "processed" ? "Verify" : "View Docmuent";
-    } else {
-      return item.status;
-    }
-  };
+  // Filter states for each column
+  const [docIdFilter, setDocIdFilter] = useState<Option[]>([]);
+  const [statusFilter, setStatusFilter] = useState<Option[]>([]);
+  const [localFileFilter, setLocalFileFilter] = useState<Option[]>([]);
+  const [insertedTimeFilter, setInsertedTimeFilter] = useState<Option[]>([]);
+  const [triageReady, setTriageReady] = useState<boolean>(false);
+
 
   useEffect(() => {
-    fetch(
-      BACKEND_URLS.getSubTableUrl
-    )
-      .then((res) => res.json())
-      .then((data: SubTableRow[]) => {
+    const fetchData = async () => {
+      try {
+        const response = await fetch(BACKEND_URLS.getSubTableUrl);
+        if (!response.ok) {
+          throw new Error("Failed to fetch data");
+        }
+        const data: SubTableRow[] = await response.json();
         setData(data);
         setLoading(false);
-      });
+      } catch (error: any) {
+        setError(error.message);
+        setLoading(false);
+      }
+    };
+
+    fetchData();
   }, []);
 
-  if (isLoading)
+  // Extract unique values for dropdowns
+  const uniqueDocIds = Array.from(new Set(data.map((item) => item.doc_id)));
+  const uniqueStatuses = Array.from(new Set(data.map((item) => item.status)));
+  const uniqueLocalFiles = Array.from(new Set(data.map((item) => item.local_file)));
+  const uniqueInsertedTimes = Array.from(new Set(data.map((item) => item.inserted_time)));
+
+  const toOption = (value: string): Option => ({ value, label: value });
+
+  // Filtering logic based on column values
+  const filteredData = data.filter(
+    (item) =>
+      (docIdFilter.length === 0 || docIdFilter.some((filter) => filter.value === item.doc_id)) &&
+      (statusFilter.length === 0 || statusFilter.some((filter) => filter.value === item.status)) &&
+      (localFileFilter.length === 0 || localFileFilter.some((filter) => filter.value === item.local_file)) &&
+      (insertedTimeFilter.length === 0 || insertedTimeFilter.some((filter) => filter.value === item.inserted_time))
+  );
+
+  if (isLoading) {
     return (
-      <p className="m-5 text-xl text-center">Loading data from sub_table...</p>
+      <div className="flex items-center justify-center h-screen">
+        <FaSpinner className="animate-spin text-4xl text-gray-600" /> {/* Rotating spinner */}
+      </div>
     );
-  if (!data) return <p>No profile data</p>;
+  }
+
+  if (error) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <p className="text-xl text-red-500 mb-4">Error: {error}</p> {/* Error message */}
+        <button
+          onClick={() => window.location.reload()} // Refresh the page on button click
+          className="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+        >
+          Refresh
+        </button>
+      </div>
+    );
+  }
+
+  if (filteredData.length === 0) {
+    return (
+      <div className="flex flex-col items-center justify-center h-screen">
+        <FaExclamationCircle className="text-5xl text-gray-400 mb-4" /> {/* Icon */}
+        <p className="text-xl text-gray-600">No data available</p> {/* Text */}
+      </div>
+    );
+  }
+
+  if (triageReady) {
+    return (
+      <div className="flex items-center justify-center h-screen">
+        <FaSpinner className="animate-spin text-4xl text-gray-600" /> {/* Rotating spinner */}
+      </div>
+    );
+  }
 
   return (
     <div className="max-w-5xl mx-auto mt-4">
-      <div className="bg-slate-500 text-white rounded-md p-4">
+      <div className="bg-slate-500 text-black rounded-md p-4">
         <div className="grid grid-cols-4 gap-3 text-xl">
           <div className="text-left">
             <h1>Document ID</h1>
+            <Select
+              isMulti
+              value={docIdFilter}
+              onChange={(selected) => setDocIdFilter(selected as Option[])}
+              options={uniqueDocIds.map(toOption)}
+              className="mt-1"
+            />
           </div>
           <div className="text-left">
             <h1>Uploaded File</h1>
+            <Select
+              isMulti
+              value={localFileFilter}
+              onChange={(selected) => setLocalFileFilter(selected as Option[])}
+              options={uniqueLocalFiles.map(toOption)}
+              className="mt-1"
+            />
           </div>
           <div className="text-center">
             <h1>Status</h1>
+            <Select
+              isMulti
+              value={statusFilter}
+              onChange={(selected) => setStatusFilter(selected as Option[])}
+              options={uniqueStatuses.map(toOption)}
+              className="mt-1"
+            />
           </div>
           <div className="text-right">
             <h1>Inserted Time (IST)</h1>
+            <Select
+              isMulti
+              value={insertedTimeFilter}
+              onChange={(selected) => setInsertedTimeFilter(selected as Option[])}
+              options={uniqueInsertedTimes.map(toOption)}
+              className="mt-1"
+            />
           </div>
         </div>
       </div>
       <div className="h-[75vh] overflow-y-auto">
-        {data.map((item) => (
+        {filteredData.map((item) => (
           <div
-            className={`my-4 p-4 bg-white border border-gray-300 rounded-md shadow-md hover:shadow-lg transition duration-300 ease-in-out`}
+            className="my-4 p-4 bg-white border border-gray-300 rounded-md shadow-md hover:shadow-lg transition duration-300 ease-in-out"
             key={item.doc_id}
           >
             <div className="grid grid-cols-4 gap-4 items-center">
@@ -77,24 +173,26 @@ function Submissions() {
                     pathname: "/triage",
                     query: {
                       doc_id: item.doc_id,
-                      json_type: (item.status == 'GT exists'? "gt_json": "ai_json"),
+                      json_type: item.status === "verified" ? "gt_json" : "ai_json",
                     },
                   }}
                   onMouseEnter={() => setHoveredRow(item.doc_id)}
                   onMouseLeave={() => setHoveredRow(null)}
-                  className={`text rounded-lg p-2 cursor-pointer ${
-                    item.status === "processed"
+                  onClick={() => setTriageReady(true)} // Add this line
+                  className={`text rounded-lg p-2 cursor-pointer ${item.status === "processed"
                       ? "bg-green-200"
                       : item.status === "inqueue"
-                      ? "bg-yellow-200"
-                      : item.status === 'processing'
-                      ? "bg-orange-200"
-                      : item.status === "failed"
-                      ? "bg-red-200"
-                      : ""
-                  }`}
+                        ? "bg-yellow-200"
+                        : item.status === "processing"
+                          ? "bg-orange-200"
+                          : item.status === "failed"
+                            ? "bg-red-200"
+                            : item.status === "verified"
+                              ? "bg-green-400"
+                              : "bg-pink-200"
+                    }`}
                 >
-                  {getTextOnHover(item)}
+                  {item.status}
                 </Link>
               </div>
               <div className="text-right">
@@ -103,7 +201,6 @@ function Submissions() {
             </div>
           </div>
         ))}
-        {!data.length && <a>No Data</a>}
       </div>
     </div>
   );

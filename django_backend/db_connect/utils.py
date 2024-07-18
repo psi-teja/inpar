@@ -7,9 +7,10 @@ def get_unique_id():
     return now.strftime("%Y%m%d%H%M%S%f")[:-3]
 
 
-def save_file(file_path, uploaded_file):
-    with open(file_path, 'wb+') as destination:
-        for chunk in uploaded_file.chunks():
+def save_file(destination_path, file_object):
+    with open(destination_path, 'wb') as destination:
+        for chunk in file_object.chunks():
             destination.write(chunk)
+
 
     

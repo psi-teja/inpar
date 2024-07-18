@@ -1,7 +1,5 @@
-import boto3
 import os
 import zipfile
-from botocore.exceptions import NoCredentialsError, PartialCredentialsError
 
 # Set environment variable for AWS profile
 os.environ["AWS_PROFILE"] = "psi.teja_aws_profile"

@@ -2,8 +2,7 @@ import pandas as pd
 from collections import Counter
 import copy
 from fitz import Rect
-import cv2, os, json
-from fuzzywuzzy import fuzz
+import cv2, os
 
 current_dir = os.path.dirname(__file__)
 

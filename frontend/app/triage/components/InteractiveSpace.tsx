@@ -250,6 +250,7 @@ const InteractiveSpace: React.FC<InteractiveSpaceProps> = ({
 
   const handleChangeView = (viewType: string) => {
     setView(viewType);
+    setSelectedField(null)
   };
 
   return (

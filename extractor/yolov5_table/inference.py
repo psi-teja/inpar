@@ -3,14 +3,10 @@ import os
 import cv2
 import numpy as np
 from PIL import Image
-from yolov5_table_utils import get_random_color, download_model_from_s3
+from yolov5_table_utils import get_random_color
 
 current_dir = os.path.dirname(__file__)
 job_dir = os.path.join(current_dir, "results","runs","20240618233422")
-
-if not os.path.exists(job_dir):
-    if not download_model_from_s3(job_dir):
-        raise RuntimeError("Failed to download model from S3. Exiting script.")
 
 model_path = os.path.join(job_dir, "weights", "best.pt")
 

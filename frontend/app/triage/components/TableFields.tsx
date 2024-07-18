@@ -68,17 +68,18 @@ const TableFields: React.FC<TableFieldsProps> = ({
     if (fieldName === "LedgerDetails") {
       predefinedFields = ['LedgerName', 'LedgerRate', 'LedgerAmount'];
     } else {
-      predefinedFields = ["ActualQty",
-        "BilledQty",
-        "CGSTAmount",
-        "DiscountAmount",
-        "DiscountRate",
-        "HSNSACCode",
-        "IGSTAmount",
+      predefinedFields = [
         "ItemAmount",
         "ItemBox",
         "ItemName",
         "ItemDescription",
+        "HSNSACCode",
+        "BilledQty",
+        "ActualQty",
+        "CGSTAmount",
+        "DiscountAmount",
+        "DiscountRate",
+        "IGSTAmount",
         "ItemRate",
         "ItemRateUOM",
         "SGSTAmount"];
@@ -103,7 +104,7 @@ const TableFields: React.FC<TableFieldsProps> = ({
     }
 
     setDisplayCols(initialDisplayCols);
-  }, [fieldName, fieldValue]);
+  }, [fieldName]);
 
 
 
@@ -127,7 +128,7 @@ const TableFields: React.FC<TableFieldsProps> = ({
                 value && (
                   <th
                     key={fieldName}
-                    className={`px-2 text-left text-white border-r border-b border-solid border-gray-400 font-medium text-sm ${fieldName === currField ? "bg-blue-400" : ""}`}
+                    className={`px-2 text-left  border-r border-b border-solid border-gray-400 font-medium text-sm ${fieldName === currField ? "bg-blue-300" : "text-white"}`}
                   >
                     {fieldName}
                   </th>
@@ -142,7 +143,7 @@ const TableFields: React.FC<TableFieldsProps> = ({
               className={`p-0 ${index === currIndex ? "bg-gray-200" : ""}`}
             >
               <td
-                className={`sticky left-0 border-b border-r border-solid border-blue-200 ${index === currIndex ? "bg-blue-400" : "bg-blue-500"}`}
+                className={`sticky left-0 border-b border-r border-solid border-blue-200 ${index === currIndex ? "bg-blue-300" : "bg-blue-500"}`}
               >
                 <button
                   className="px-3 text-xl font-bold text-white rounded hover:bg-red-500 hover:text-white focus:outline-none"
