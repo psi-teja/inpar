@@ -17,6 +17,23 @@ interface Option {
   label: string;
 }
 
+const statusClass = (status: string) => {
+  switch (status) {
+    case "processed":
+      return "bg-blue-400 hover:bg-blue-300";
+    case "inqueue":
+      return "bg-yellow-500 hover:bg-yellow-400";
+    case "processing":
+      return "bg-blue-500";
+    case "failed":
+      return "bg-red-400 hover:bg-red-300";
+    case "verified":
+      return "bg-green-500 hover:bg-green-400";
+    default:
+      return "bg-gray-400";
+  }
+};
+
 function Submissions() {
   const [data, setData] = useState<SubTableRow[]>([]);
   const [isLoading, setLoading] = useState<boolean>(true);
@@ -106,58 +123,59 @@ function Submissions() {
   }
 
   return (
-    <div className="max-w-5xl mx-auto mt-4">
-     <div className="bg-gradient-to-br from-blue-500 to-cyan-400 text-gray-800 rounded-md p-6 shadow-lg">
-  <div className="grid grid-cols-4 gap-6 text-lg">
-    <div className="text-left">
-      <h1 className="text-white font-bold mb-3">Document ID</h1>
-      <Select
-        isMulti
-        value={docIdFilter}
-        onChange={(selected) => setDocIdFilter(selected as Option[])}
-        options={uniqueDocIds.map(toOption)}
-        className="mt-2"
-      />
-    </div>
-    <div className="text-left">
-      <h1 className="text-white font-bold mb-3">Uploaded File</h1>
-      <Select
-        isMulti
-        value={localFileFilter}
-        onChange={(selected) => setLocalFileFilter(selected as Option[])}
-        options={uniqueLocalFiles.map(toOption)}
-        className="mt-2"
-      />
-    </div>
-    <div className="text-center">
-      <h1 className="text-white font-bold mb-3">Status</h1>
-      <Select
-        isMulti
-        value={statusFilter}
-        onChange={(selected) => setStatusFilter(selected as Option[])}
-        options={uniqueStatuses.map(toOption)}
-        className="mt-2"
-      />
-    </div>
-    <div className="text-right">
-      <h1 className="text-white font-bold mb-3">Inserted Time (IST)</h1>
-      <Select
-        isMulti
-        value={insertedTimeFilter}
-        onChange={(selected) => setInsertedTimeFilter(selected as Option[])}
-        options={uniqueInsertedTimes.map(toOption)}
-        className="mt-2"
-      />
-    </div>
-  </div>
-</div>
+    <div className="max-w-6xl mx-auto mt-8">
+      <div className="bg-gradient-to-br from-blue-500 to-cyan-400 text-gray-800 rounded-md p-6 shadow-lg">
+        <div className="grid grid-cols-4 gap-6 text-lg">
+          <div className="text-left">
+            <h1 className="text-white font-bold mb-3">Document ID</h1>
+            <Select
+              isMulti
+              value={docIdFilter}
+              onChange={(selected) => setDocIdFilter(selected as Option[])}
+              options={uniqueDocIds.map(toOption)}
+              className="mt-2"
+            />
+          </div>
+          <div className="text-left">
+            <h1 className="text-white font-bold mb-3">Uploaded File</h1>
+            <Select
+              isMulti
+              value={localFileFilter}
+              onChange={(selected) => setLocalFileFilter(selected as Option[])}
+              options={uniqueLocalFiles.map(toOption)}
+              className="mt-2"
+            />
+          </div>
+          <div className="text-center">
+            <h1 className="text-white font-bold mb-3">Status</h1>
+            <Select
+              isMulti
+              value={statusFilter}
+              onChange={(selected) => setStatusFilter(selected as Option[])}
+              options={uniqueStatuses.map(toOption)}
+              className="mt-2"
+            />
+          </div>
+          <div className="text-right">
+            <h1 className="text-white font-bold mb-3">Inserted Time (IST)</h1>
+            <Select
+              isMulti
+              value={insertedTimeFilter}
+              onChange={(selected) => setInsertedTimeFilter(selected as Option[])}
+              options={uniqueInsertedTimes.map(toOption)}
+              className="mt-2"
+            />
+          </div>
+        </div>
+      </div>
 
-
-      <div className="h-[75vh] overflow-y-auto mt-4">
+      <div className="h-[75vh] overflow-y-auto mt-6">
         {filteredData.map((item) => (
           <div
-            className={`my-4 p-4 bg-white border border-gray-300 rounded-md shadow-md hover:shadow-lg transition duration-300 ease-in-out ${hoveredRow === item.doc_id ? 'bg-blue-100' : ''}`}
+            className={`my-4 p-6 bg-white border border-gray-300 rounded-md shadow-md hover:shadow-lg transition duration-300 ease-in-out ${hoveredRow === item.doc_id ? 'bg-blue-100' : ''}`}
             key={item.doc_id}
+            onMouseEnter={() => setHoveredRow(item.doc_id)}
+            onMouseLeave={() => setHoveredRow(null)}
           >
             <div className="grid grid-cols-4 gap-4 items-center">
               <div className="text-left">
@@ -166,7 +184,7 @@ function Submissions() {
               <div className="text-center">
                 <p className="text-sm font-semibold">{item.local_file}</p>
               </div>
-              <div className="text-center">
+              <div className="text-center ">
                 <Link
                   href={{
                     pathname: "/triage",
@@ -175,24 +193,12 @@ function Submissions() {
                       json_type: item.status === "verified" ? "gt_json" : "ai_json",
                     },
                   }}
-                  onMouseEnter={() => setHoveredRow(item.doc_id)}
-                  onMouseLeave={() => setHoveredRow(null)}
                   onClick={() => setTriageReady(true)}
-                  className={`text rounded-lg p-2 cursor-pointer ${item.status === "processed"
-                      ? "bg-green-200"
-                      : item.status === "inqueue"
-                        ? "bg-yellow-200"
-                        : item.status === "processing"
-                          ? "bg-orange-200"
-                          : item.status === "failed"
-                            ? "bg-red-200"
-                            : item.status === "verified"
-                              ? "bg-green-400"
-                              : "bg-pink-200"
-                    }`}
+                  className={`inline-block px-4 py-2 font-bold rounded-lg transition-colors duration-300 ease-in-out ${statusClass(item.status)}`}
                 >
                   {item.status}
                 </Link>
+
               </div>
               <div className="text-right">
                 <p className="text-sm">{item.inserted_time}</p>

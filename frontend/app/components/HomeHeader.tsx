@@ -54,10 +54,10 @@ function HomeHeader() {
       <h1 className="text-3xl font-extrabold text-white tracking-tight leading-tight">
         InPar
       </h1>
-      <div className="flex items-center">
+      <div className="flex items-center ">
         <label
           htmlFor="file-upload"
-          className={`cursor-pointer bg-gradient-to-r from-blue-800 to-cyan-500 hover:bg-gradient-to-bl text-white px-4 py-2 rounded-xl flex items-center transition duration-100 ${isLoading ? "opacity-50 pointer-events-none" : ""}`}
+          className={`cursor-pointer active:border-2 bg-gradient-to-r from-blue-800 to-cyan-500 hover:bg-gradient-to-bl text-white px-4 py-2 rounded-xl flex items-center transition duration-300 ${isLoading ? "opacity-50 pointer-events-none" : ""}`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -79,7 +79,7 @@ function HomeHeader() {
           id="file-upload"
           type="file"
           accept=".pdf, .doc, .docx, .jpeg, .png, .jpg, .webp"
-          className="hidden"
+          className="hidden" 
           onChange={handleFileUpload}
         />
       </div>

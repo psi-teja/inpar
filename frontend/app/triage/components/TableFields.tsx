@@ -68,7 +68,6 @@ const TableFields: React.FC<TableFieldsProps> = ({
       predefinedFields = ['LedgerName', 'LedgerRate', 'LedgerAmount'];
     } else {
       predefinedFields = [
-        "ItemAmount",
         "ItemBox",
         "ItemName",
         "ItemDescription",
@@ -81,7 +80,8 @@ const TableFields: React.FC<TableFieldsProps> = ({
         "IGSTAmount",
         "ItemRate",
         "ItemRateUOM",
-        "SGSTAmount"
+        "SGSTAmount",
+        "ItemAmount",
       ];
     }
 
@@ -107,11 +107,11 @@ const TableFields: React.FC<TableFieldsProps> = ({
   }, [fieldName]);
 
   return (
-    <div className="h-[26vh] overflow-auto">
+    <div className="h-[25vh] overflow-auto">
       <table className="min-w-full bg-white">
         <thead className="sticky top-0 z-10">
           <tr className="">
-            <th className="sticky left-0 border-r border-b border-solid border-gray-400 bg-gray-300">
+            <th className="sticky left-0 bg-gray-300">
               <AddField
                 displayCols={displayCols}
                 handleAddField={handleAddField}
@@ -123,7 +123,7 @@ const TableFields: React.FC<TableFieldsProps> = ({
                 value && (
                   <th
                     key={fieldName}
-                    className={`px-2 text-left border-r border-b border-solid border-gray-400 font-medium text-sm ${fieldName === currField ? "bg-cyan-300" : "bg-blue-500 text-white"}`}
+                    className={`px-2 text-left font-medium text-sm ${fieldName === currField ? "bg-cyan-300" : "bg-blue-500 text-white"}`}
                   >
                     {fieldName}
                   </th>
@@ -135,10 +135,10 @@ const TableFields: React.FC<TableFieldsProps> = ({
           {fieldValue.map((row: any, index: number) => (
             <tr
               key={index}
-              className={`p-0 ${index === currIndex ? "bg-gray-200" : ""}`}
+              className={`p-0 border-b ${index === currIndex ? "" : ""}`}
             >
               <td
-                className={`sticky left-0 border-b border-r border-solid border-blue-200 ${index === currIndex ? "bg-cyan-300" : "bg-gray-300"}`}
+                className={`sticky left-0 ${index === currIndex ? "bg-cyan-300" : "bg-gray-300"}`}
               >
                 <button
                   className={`px-3 text-xl font-bold rounded hover:bg-red-500 text-black focus:outline-none hover:text-white`}
@@ -160,24 +160,25 @@ const TableFields: React.FC<TableFieldsProps> = ({
                         handleFieldClick(fieldName, index, colName, row[colName].location);
                         changeCurr(index, colName);
                       }}
-                      className={`p-0 ${colName === currField && index === currIndex ? "bg-red-200" : ""}`}
+                      className={`p-1 ${colName === currField && index === currIndex ? "bg-red-200" : ""}`}
                     >
                       {colName !== "id" ? (
-                        <div className="flex justify-content items-center border-b border-r border-solid border-blue-500">
-                          <input
-                            value={row[colName]?.text}
-                            className="p-1 m-1 h-8 text-xs overflow-x-auto leading-4 border border-gray-300 rounded focus:outline-none focus:border-blue-500 hover:border-blue-400 overflow-x-auto"
+                        <div className="flex justify-content items-center">
+                          <textarea
+                            value={row[colName]?.text || ''}
+                            className="p-2 m-1 h-10 rounded-md border border-gray-300 focus:outline-none focus:ring-2 focus:ring-blue-500 overflow-auto resize"
                             onChange={(e) =>
                               handleNestedFieldChange(
                                 fieldName,
                                 index,
                                 colName,
                                 e.target.value,
-                                row[colName].location,
+                                row[colName]?.location,
                                 "update value"
                               )
                             }
                           />
+
                           {row[colName]?.location?.pageNo !== 0 && (
                             <button
                               onClick={(e) =>
@@ -230,20 +231,15 @@ const TableFields: React.FC<TableFieldsProps> = ({
               )}
             </tr>
           ))}
-          <tr className="">
-            <td
-              className={`sticky left-0 border-b border-r border-solid border-gray-400 bg-blue-100`}
-            >
-              <button
-                className="px-3 text-xl font-bold text-black rounded hover:bg-green-700 hover:text-white focus:outline-none"
-                onClick={(e) => handleNestedRowAdd(fieldName)}
-              >
-                +
-              </button>
-            </td>
-          </tr>
         </tbody>
+
       </table>
+      <button
+        className="p-2 m-2 font-bold text-black rounded hover:bg-green-700 hover:text-white focus:outline-none"
+        onClick={(e) => handleNestedRowAdd(fieldName)}
+      >
+        + Add Row
+      </button>
     </div>
   );
 };

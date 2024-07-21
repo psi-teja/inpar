@@ -319,15 +319,6 @@ const PdfViewer: React.FC<PdfViewerProps> = ({
     }
   };
 
-  if (loading) {
-    return (
-      <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75">
-        <FaSpinner className="animate-spin text-4xl text-gray-600" /> {/* Rotating spinner */}
-      </div>
-    );
-  }
-
-
   return (
     <div className="shadow-lg">
       <PdfTools
@@ -346,7 +337,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({
         ref={viewerRef}
       >
         {loading &&
-        <div className="absolute inset-0 flex items-center justify-center bg-white bg-opacity-75">
+        <div className="relative inset-0 flex items-center justify-center bg-white bg-opacity-75 h-screen">
           <FaSpinner className="animate-spin text-4xl text-gray-600" /> {/* Rotating spinner */}
         </div>}
         <Document file={file} onLoadSuccess={onDocumentLoadSuccess}>

@@ -211,7 +211,7 @@ const InteractiveSpace: React.FC<InteractiveSpaceProps> = ({
           // setExtractedData(require("./tally.json"));
           setDataChanged(false);
         } else {
-          setExtractedData({});
+          setExtractedData(null);
           setNoData(true);
         }
         setLoading(false);

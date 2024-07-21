@@ -42,7 +42,7 @@ const AddField: React.FC<AddFieldProps> = ({ displayCols, handleAddField, handle
 
       {isOpen && (
         <div
-          className="absolute top-12 left-0 rounded-lg w-64 shadow-lg p-4 border border-solid border-gray-300 bg-white"
+          className="absolute top-12 left-0 rounded-lg w-64 h-[50vh] overflow-auto scroll-smooth shadow-lg p-4 border border-solid border-gray-300 bg-white"
           style={{ overflowY: "auto", zIndex: 10 }}
           onMouseEnter={() => setIsOpen(true)}
           onMouseLeave={() => setIsOpen(false)}

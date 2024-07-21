@@ -26,7 +26,7 @@ const SingleValuedField: React.FC<SingleValuedFieldProps> = ({
   handleSingleValuedFieldChange,
 }) => {
 
-  if (fieldValue.location?.pageNo == 0 && fieldValue.text == "") return;
+  // if (fieldValue.location?.pageNo ==0 && fieldValue.text == "") return;
 
   return (
     <div
