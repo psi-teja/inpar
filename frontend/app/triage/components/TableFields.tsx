@@ -111,7 +111,7 @@ const TableFields: React.FC<TableFieldsProps> = ({
       <table className="min-w-full bg-white">
         <thead className="sticky top-0 z-10">
           <tr className="">
-            <th className="sticky left-0 bg-gray-300">
+            <th className="sticky left-0 bg-gray-100">
               <AddField
                 displayCols={displayCols}
                 handleAddField={handleAddField}
@@ -135,10 +135,10 @@ const TableFields: React.FC<TableFieldsProps> = ({
           {fieldValue.map((row: any, index: number) => (
             <tr
               key={index}
-              className={`p-0 border-b ${index === currIndex ? "" : ""}`}
+              className={`p-0 border-b ${index === currIndex ? "bg-gray-200" : ""}`}
             >
               <td
-                className={`sticky left-0 ${index === currIndex ? "bg-cyan-300" : "bg-gray-300"}`}
+                className={`sticky left-0 ${index === currIndex ? "bg-cyan-300" : "bg-gray-100"}`}
               >
                 <button
                   className={`px-3 text-xl font-bold rounded hover:bg-red-500 text-black focus:outline-none hover:text-white`}
@@ -235,7 +235,7 @@ const TableFields: React.FC<TableFieldsProps> = ({
 
       </table>
       <button
-        className="p-2 m-2 font-bold text-black rounded hover:bg-green-700 hover:text-white focus:outline-none"
+        className="p-2 m-2 font-bold text-black rounded hover:bg-gray-400 hover:text-white focus:outline-none"
         onClick={(e) => handleNestedRowAdd(fieldName)}
       >
         + Add Row

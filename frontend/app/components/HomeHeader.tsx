@@ -57,7 +57,7 @@ function HomeHeader() {
       <div className="flex items-center ">
         <label
           htmlFor="file-upload"
-          className={`cursor-pointer active:border-2 bg-gradient-to-r from-blue-800 to-cyan-500 hover:bg-gradient-to-bl text-white px-4 py-2 rounded-xl flex items-center transition duration-300 ${isLoading ? "opacity-50 pointer-events-none" : ""}`}
+          className={`cursor-pointer active:border-2 active:bg-gray-300 bg-gradient-to-r from-blue-800 to-cyan-500 hover:bg-gradient-to-bl text-white px-4 py-2 rounded-xl flex items-center transition duration-300 ${isLoading ? "pointer-events-none" : ""}`}
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"

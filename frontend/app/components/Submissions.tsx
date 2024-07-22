@@ -194,10 +194,11 @@ function Submissions() {
                     },
                   }}
                   onClick={() => setTriageReady(true)}
-                  className={`inline-block px-4 py-2 font-bold rounded-lg transition-colors duration-300 ease-in-out ${statusClass(item.status)}`}
+                  className={`inline-block px-4 py-2 font-bold text-white rounded-lg transition-colors duration-300 ease-in-out shadow-md hover:shadow-lg ${statusClass(item.status)}`}
                 >
                   {item.status}
                 </Link>
+
 
               </div>
               <div className="text-right">
