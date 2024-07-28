@@ -18,26 +18,40 @@ const ToggleView: React.FC<ToggleViewProps> = ({
         'bg-gray-300 text-gray-700 hover:bg-blue-300 hover:text-white';
 
     return (
-        <div className={`flex ${(viewType=="General")? "ml-3": "ml-20"}`}>
-            <button
-                className={`${buttonBaseClass} ${viewType === "General" ? activeButtonClass : inactiveButtonClass}`}
-                onClick={() => handleChangeView("General")}
-            >
-                General
-            </button>
-            <button
-                className={`${buttonBaseClass} ${viewType === "Items" ? activeButtonClass : inactiveButtonClass}`}
-                onClick={() => handleChangeView("Items")}
-            >
-                Items
-            </button>
-            <button
-                className={`${buttonBaseClass} ${viewType === "Ledgers" ? activeButtonClass : inactiveButtonClass}`}
-                onClick={() => handleChangeView("Ledgers")}
-            >
-                Ledgers
-            </button>
-        </div>
+      <div className={`flex ${viewType == "General" || viewType== "ROI"? "ml-3" : "ml-3"}`}>
+        <button
+          className={`${buttonBaseClass} ${
+            viewType === "General" ? activeButtonClass : inactiveButtonClass
+          }`}
+          onClick={() => handleChangeView("General")}
+        >
+          General
+        </button>
+        <button
+          className={`${buttonBaseClass} ${
+            viewType === "Items" ? activeButtonClass : inactiveButtonClass
+          }`}
+          onClick={() => handleChangeView("Items")}
+        >
+          Items
+        </button>
+        <button
+          className={`${buttonBaseClass} ${
+            viewType === "Ledgers" ? activeButtonClass : inactiveButtonClass
+          }`}
+          onClick={() => handleChangeView("Ledgers")}
+        >
+          Ledgers
+        </button>
+        <button
+          className={`${buttonBaseClass} ${
+            viewType === "ROI" ? activeButtonClass : inactiveButtonClass
+          }`}
+          onClick={() => handleChangeView("ROI")}
+        >
+          ROI
+        </button>
+      </div>
     );
 }
 

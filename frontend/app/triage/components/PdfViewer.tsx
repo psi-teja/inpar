@@ -233,7 +233,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({
         const scaledWidth = width / pdfDim.width / scale;
         const scaledHeight = height / pdfDim.height / scale;
 
-        if (selectedField != "Table" && selectedField != "LedgerDetails") {
+        if (selectedField != "Table" && selectedField != "LedgerDetails" && selectedField != "ROI") {
           handleSingleValuedFieldChange(
             selectedField,
             null,
@@ -274,9 +274,6 @@ const PdfViewer: React.FC<PdfViewerProps> = ({
           height
         );
         const imageDataUrl = canvas.toDataURL();
-        console.log(left, top)
-        console.log(document.getElementsByTagName("canvas")[0])
-        console.log(imageDataUrl)
 
         // Convert the data URL to a blob
         const blob = await fetch(imageDataUrl).then((res) => res.blob());
@@ -292,7 +289,7 @@ const PdfViewer: React.FC<PdfViewerProps> = ({
           });
           const data = await response.json();
           // console.log("OCR Result:", data.text);
-          if (selectedField != "Table" && selectedField != "LedgerDetails") {
+          if (selectedField != "Table" && selectedField != "LedgerDetails" && selectedField != "ROI") {
             handleSingleValuedFieldChange(
               selectedField,
               data.text,
@@ -332,16 +329,25 @@ const PdfViewer: React.FC<PdfViewerProps> = ({
         handleScaleChange={handleScaleChange}
       />
       <div
-        className={`${viewType === "General" ? "w-[70vw] h-[87.5vh]" : "h-[50vh]"
-          } overflow-auto scroll-smooth ${(!boxLocation && selectedField) ? "cursor-crosshair" : ""}`}
+        className={`${
+          viewType === "General"
+            ? "w-[70vw] h-[87.5vh]"
+            : "h-[50vh]"
+        } overflow-auto scroll-smooth ${
+          !boxLocation && selectedField ? "cursor-crosshair" : ""
+        }`}
         ref={viewerRef}
       >
-        {loading &&
-        <div className="relative inset-0 flex items-center justify-center bg-white bg-opacity-75 h-screen">
-          <FaSpinner className="animate-spin text-4xl text-gray-600" /> {/* Rotating spinner */}
-        </div>}
+        {loading && (
+          <div className="relative inset-0 flex items-center justify-center bg-white bg-opacity-75 h-screen">
+            <FaSpinner className="animate-spin text-4xl text-gray-600" />{" "}
+            {/* Rotating spinner */}
+          </div>
+        )}
         <Document file={file} onLoadSuccess={onDocumentLoadSuccess}>
-          <Page pageNumber={pageNumber} scale={scale}
+          <Page
+            pageNumber={pageNumber}
+            scale={scale}
             onMouseDown={handleMouseDown}
             onMouseMove={handleMouseMove}
             onMouseUp={handleMouseUp}
